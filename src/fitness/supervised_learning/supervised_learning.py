@@ -52,48 +52,4 @@ class supervised_learning(base_ff):
         :return: The fitness of the evaluated individual.
         """
 
-        dist = kwargs.get('dist', 'training')
-
-        if dist == "training":
-            # Set training datasets.
-            x = self.training_in
-            y = self.training_exp
-
-        elif dist == "test":
-            # Set test datasets.
-            x = self.test_in
-            y = self.test_exp
-
-        else:
-            raise ValueError("Unknown dist: " + dist)
-
-        if params['OPTIMIZE_CONSTANTS']:
-            # if we are training, then optimize the constants by
-            # gradient descent and save the resulting phenotype
-            # string as ind.phenotype_with_c0123 (eg x[0] +
-            # c[0] * x[1]**c[1]) and values for constants as
-            # ind.opt_consts (eg (0.5, 0.7). Later, when testing,
-            # use the saved string and constants to evaluate.
-            if dist == "training":
-                return optimize_constants(x, y, ind)
-
-            else:
-                # this string has been created during training
-                phen = ind.phenotype_consec_consts
-                c = ind.opt_consts
-                # phen will refer to x (ie test_in), and possibly to c
-                yhat = eval(phen)
-                assert np.isrealobj(yhat)
-
-                # let's always call the error function with the
-                # true values first, the estimate second
-                return params['ERROR_METRIC'](y, yhat)
-
-        else:
-            # phenotype won't refer to C
-            yhat = eval(ind.phenotype)
-            assert np.isrealobj(yhat)
-
-            # let's always call the error function with the true
-            # values first, the estimate second
-            return params['ERROR_METRIC'](y, yhat)
+        return 1 if len(ind.phenotype) < 16 else 0
