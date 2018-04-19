@@ -338,42 +338,44 @@ def generate_PI_ind_tree(max_depth):
     :return: A fully built individual.
     """
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     # Initialise an instance of the tree class
     ind_tree = Tree(str(params['BNF_GRAMMAR'].start_rule["symbol"]), None)
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     # Generate a tree
+    # print('ind_tree is', ind_tree)
+    # print('max_depth is', max_depth)
     genome, output, nodes, depth = pi_grow(ind_tree, max_depth)
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     # Get remaining individual information
     phenotype, invalid, used_cod = "".join(output), False, len(genome)
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     if params['BNF_GRAMMAR'].python_mode:
         # Grammar contains python code
 
-        print(getframeinfo(currentframe()).lineno)
+        # print(getframeinfo(currentframe()).lineno)
         phenotype = python_filter(phenotype)
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     # Initialise individual
     ind = individual.Individual(genome, ind_tree, map_ind=False)
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     # Set individual parameters
     ind.phenotype, ind.nodes = phenotype, nodes
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     ind.depth, ind.used_codons, ind.invalid = depth, used_cod, invalid
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     # Generate random tail for genome.
     ind.genome = genome + [randint(0, params['CODON_SIZE']) for
                            _ in range(int(ind.used_codons / 2))]
 
-    print(getframeinfo(currentframe()).lineno)
+    # print(getframeinfo(currentframe()).lineno)
     return ind
 
 
