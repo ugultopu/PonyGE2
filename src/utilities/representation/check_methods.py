@@ -2,7 +2,6 @@ from algorithm.parameters import params
 from representation import individual
 import numpy as np
 
-
 def check_ind(ind, check):
     """
     Check all shallow aspects of an individual to ensure everything is correct.
@@ -218,7 +217,7 @@ def build_genome(tree, genome):
     return genome
 
 
-def get_nodes_and_depth(tree, nodes=0, max_depth=0):
+def get_nodes_and_depth(tree, nodes=0, max_depth=0, get_nodes_and_depth_else_case_count=0):
     """
     Get the number of nodes and the max depth of the tree.
 
@@ -255,9 +254,11 @@ def get_nodes_and_depth(tree, nodes=0, max_depth=0):
             max_depth = tree.depth + 1
 
     else:
+        # print(str(get_nodes_and_depth_else_case_count) + ': In else case of "get_nodes_and_depth"')
+        get_nodes_and_depth_else_case_count += 1
         for child in NT_kids:
             # Recurse over all children.
-            nodes, max_depth = get_nodes_and_depth(child, nodes, max_depth)
+            nodes, max_depth = get_nodes_and_depth(child, nodes, max_depth, get_nodes_and_depth_else_case_count)
 
     return nodes, max_depth
 
@@ -318,7 +319,6 @@ def get_output(ind_tree):
     """
 
     def build_output(tree):
-        print('tree is', tree)
         """
         Recursively adds all node roots to a list which can be joined to
         create the phenotype.
