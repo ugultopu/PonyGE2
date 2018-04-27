@@ -255,7 +255,6 @@ def PI_grow(size):
         # print('depths are', depths)
         generate_PI_ind_tree_call_counter = 0
         for depth in depths:
-            print('At outer for of PI_grow')
             # Iterate over number of required individuals per depth.
             for i in range(times):
 
@@ -270,8 +269,6 @@ def PI_grow(size):
                 # print('Calling append population')
                 population.append(ind)
                 # print('Called append population')
-
-        print('After for loop of PI_grow')
 
         if remainder:
             # The full "size" individuals were not generated. The population

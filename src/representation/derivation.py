@@ -291,9 +291,6 @@ def pi_grow(tree, max_depth):
     queue = [[tree, ret_true(params['BNF_GRAMMAR'].non_terminals[
                                  tree.root]['recursive'])]]
 
-    # print('queue is', jsonpickle.encode(queue))
-    print('Length of queue is', len(queue))
-
     # Initialise empty genome. With PI operators we can't use a depth-first
     # traversal of the tree to build the genome, we need to build it as we
     # encounter each node.

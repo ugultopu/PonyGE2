@@ -1,0 +1,8 @@
+# Basic grammar for an l-system
+<string> ::= <letter>|<letter><string>
+<letter> ::= <direction>|<turn>
+
+# This suggests forward or backward movement with single 90 deg turns
+# More interesting features can be introduced
+<direction> ::= F|B
+<turn> ::= +|-
