@@ -11,6 +11,7 @@ def draw_phenotype(phenotype):
         elif move == '-':
             turtle.right(90)
     turtle.getscreen().getcanvas().postscript(file='phenotype'+str(idx)+'.eps')
+    turtle.clear()
 
 MAX_PHENOTYPE_LENGTH = 20
 
@@ -33,6 +34,7 @@ with open('/Users/utku/src/python/PonyGE2/results/TA3E3.WPA.Dal.Ca_18_4_27_17312
 print(phenotypes)
 
 draw_phenotype(phenotypes[0])
+draw_phenotype(phenotypes[1])
 
 # for phenotype in phenotypes:
 #     draw_phenotype(phenotype)
