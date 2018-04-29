@@ -1,7 +1,7 @@
 import turtle
 
 def draw_phenotype(phenotype):
-    for move in phenotype:
+    for idx, move in enumerate(phenotype):
         if move == 'F':
             turtle.forward(100)
         elif move == 'B':
@@ -10,6 +10,7 @@ def draw_phenotype(phenotype):
             turtle.left(90)
         elif move == '-':
             turtle.right(90)
+    turtle.getscreen().getcanvas().postscript(file='phenotype'+str(idx)+'.eps')
 
 MAX_PHENOTYPE_LENGTH = 20
 
