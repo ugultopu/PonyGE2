@@ -9,4 +9,7 @@ with open('test.txt') as file:
 
 combinations = itertools.combinations(phenotypes, 2)
 
-print(list(combinations))
+# print(list(combinations))
+
+for combo in combinations:
+    print(combo)
