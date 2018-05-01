@@ -63,6 +63,9 @@ print(82 * '_')
 reduced_data = PCA(n_components=2).fit_transform(data)
 kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
 print('reduced_data is', reduced_data)
+print('type(reduced_data) is', type(reduced_data))
+for data in reduced_data:
+    print('type(data) is', type(data))
 kmeans.fit(reduced_data)
 
 # Step size of the mesh. Decrease to increase the quality of the VQ.

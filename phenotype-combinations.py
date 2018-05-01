@@ -1,9 +1,8 @@
+import numpy
 import itertools
 
 with open('test.txt') as file:
   phenotypes = file.read().splitlines()
-
-# print(phenotypes)
 
 combinations = []
 
@@ -18,14 +17,15 @@ for combo in itertools.combinations(phenotypes, 2):
         long_phenotype_length = phenotype_0_length
 
     for i, (unit_0, unit_1) in enumerate(zip(combo[0], combo[1])):
-        # print('index: ' + str(i))
-        # print('first element: ' + str(unit_0))
-        # print('second element: ' + str(unit_1))
         if unit_0 != unit_1:
-            combinations.append((*combo, i, short_phenotype_length + long_phenotype_length - 2 * i))
+            combinations.append([i, short_phenotype_length + long_phenotype_length - 2 * i])
             break
         if i == short_phenotype_length - 1:
-            combinations.append((*combo, short_phenotype_length, long_phenotype_length - short_phenotype_length))
+            combinations.append([short_phenotype_length, long_phenotype_length - short_phenotype_length])
 
-for combination in combinations:
-    print(combination)
+combinations = numpy.array(combinations)
+
+print(combinations)
+
+# for combination in combinations:
+#     print(combination)
