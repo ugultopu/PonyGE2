@@ -1,7 +1,10 @@
 import numpy
 import itertools
+import matplotlib.pyplot as plt
 
 from sklearn.cluster import KMeans
+
+NUMBER_OF_CLUSTERS = 5
 
 with open('test.txt') as file:
   phenotypes = file.read().splitlines()
@@ -25,6 +28,9 @@ for combo in itertools.combinations(phenotypes, 2):
         if i == short_phenotype_length - 1:
             combinations.append([short_phenotype_length, long_phenotype_length - short_phenotype_length])
 
-clusters = KMeans(n_clusters=5).fit_predict(numpy.array(combinations))
+combinations = numpy.array(combinations)
 
-print(clusters)
+clusters = KMeans(n_clusters=NUMBER_OF_CLUSTERS).fit_predict(combinations)
+
+plt.scatter(combinations[:, 0], combinations[:, 1], c=clusters)
+plt.show()
