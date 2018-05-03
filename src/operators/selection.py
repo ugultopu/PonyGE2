@@ -8,9 +8,6 @@ from algorithm.parameters import params
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
 
-# FIXME Read this from 'params'
-NUMBER_OF_CLUSTERS = 5
-
 def selection(population):
     """
     Perform selection on a population in order to select a population of
@@ -20,8 +17,7 @@ def selection(population):
     :return: selected population
     """
 
-    # FIXME Specify 'clustering' in 'params'
-    return clustering(population)
+    return params['SELECTION'](population)
 
 def clustering(population):
     # Weed out the invalid individuals
@@ -49,17 +45,17 @@ def clustering(population):
 
     differences_in_combinations = numpy.array(differences_in_combinations)
 
-    clusters = KMeans(n_clusters=NUMBER_OF_CLUSTERS).fit_predict(differences_in_combinations)
+    clusters = KMeans(n_clusters=params['NUMBER_OF_CLUSTERS']).fit_predict(differences_in_combinations)
 
     partitioned_clusters = []
 
-    for n in range(NUMBER_OF_CLUSTERS):
+    for n in range(params['NUMBER_OF_CLUSTERS']):
         partitioned_clusters.append([i for i, e in enumerate(clusters) if e == n])
 
     parents = []
 
     for _ in range(int(params['GENERATION_SIZE'] / 2)):
-        parents.extend(combinations[random.choice(partitioned_clusters[random.randrange(0, NUMBER_OF_CLUSTERS)])])
+        parents.extend(combinations[random.choice(partitioned_clusters[random.randrange(0, params['NUMBER_OF_CLUSTERS'])])])
 
     return parents
 

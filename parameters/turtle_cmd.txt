@@ -11,9 +11,10 @@ INVALID_SELECTION:      False
 MAX_INIT_TREE_DEPTH:    10
 MAX_TREE_DEPTH:         20
 MUTATION:               int_flip_per_codon
+NUMBER_OF_CLUSTERS:     5
 POPULATION_SIZE:        500
 FITNESS_FUNCTION:       string_match
 REPLACEMENT:            generational
-SELECTION:              tournament
+SELECTION:              clustering
 TARGET:                 FF+F+F+FBF-FFF+F
 TOURNAMENT_SIZE:        2
