@@ -31,16 +31,6 @@ def clustering(population):
     differences_in_combinations = []
 
     for combo in combinations:
-        # Sometimes, the phenotype is 'None'. The following if, elif is to
-        # accomodate for those cases.
-        if combo[0].phenotype is None:
-            differences_in_combinations.append((0, len(combo[1].phenotype)))
-            break
-        elif combo[1].phenotype is None:
-            differences_in_combinations.append((0, len(combo[0].phenotype)))
-            break
-        # print('combo[0].phenotype is', combo[0].phenotype)
-        # print('combo[1].phenotype is', combo[1].phenotype)
         phenotype_0_length = len(combo[0].phenotype)
         phenotype_1_length = len(combo[1].phenotype)
         if phenotype_0_length < phenotype_1_length:
@@ -68,18 +58,8 @@ def clustering(population):
 
     parents = []
 
-    # print("params['GENERATION_SIZE'] is", params['GENERATION_SIZE'])
-    # print("type(params['GENERATION_SIZE']) is", type(params['GENERATION_SIZE']))
-
     for _ in range(int(params['GENERATION_SIZE'] / 2)):
-        # Sometimes, no combos in a given cluster exists. The following while
-        # loop is to accomodate for those cases.
-        cluster_index = random.randrange(0, NUMBER_OF_CLUSTERS)
-        while len(partitioned_clusters[cluster_index]) == 0:
-            cluster_index = random.randrange(0, NUMBER_OF_CLUSTERS)
-
-        selected_combo_index = random.choice(partitioned_clusters[cluster_index])
-        parents.extend(combinations[selected_combo_index])
+        parents.extend(combinations[random.choice(partitioned_clusters[random.randrange(0, NUMBER_OF_CLUSTERS)])])
 
     return parents
 
