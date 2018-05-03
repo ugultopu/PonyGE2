@@ -80,7 +80,7 @@ class Grammar(object):
 
             # Find production choices which can be used to concatenate
             # subtrees.
-            self.find_concatination_NTs()
+            self.find_concatenation_NTs()
 
     def read_bnf_file(self, file_name):
         """
@@ -338,15 +338,10 @@ class Grammar(object):
         self.min_path = self.non_terminals[self.start_rule["symbol"]][
             'min_steps']
 
-        # Initialise the maximum arity of the grammar to 0.
-        self.max_arity = 0
-
-        # Find the maximum arity of the grammar.
-        for NT in self.non_terminals:
-            if self.non_terminals[NT]['min_steps'] > self.max_arity:
-                # Set the maximum arity of the grammar as the longest path
-                # to a T from any NT.
-                self.max_arity = self.non_terminals[NT]['min_steps']
+        # Set the maximum arity of the grammar as the longest path to
+        # a T from any NT.
+        self.max_arity = max(self.non_terminals[NT]['min_steps']
+                             for NT in self.non_terminals)
 
         # Add the minimum terminal path to each production rule.
         for rule in self.rules:
@@ -579,7 +574,7 @@ class Grammar(object):
                 break
         self.min_ramp = ramp
 
-    def find_concatination_NTs(self):
+    def find_concatenation_NTs(self):
         """
         Scour the grammar class to find non-terminals which can be used to
         combine/reduce_trees derivation trees. Build up a list of such
