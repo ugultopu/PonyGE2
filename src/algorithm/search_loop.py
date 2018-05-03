@@ -1,3 +1,6 @@
+# import inspect
+import pdb
+
 from multiprocessing import Pool
 from algorithm.parameters import params
 from fitness.evaluation import evaluate_fitness
@@ -64,6 +67,7 @@ def search_loop_from_state():
         stats['gen'] = generation
 
         # New generation
+
         individuals = params['STEP'](individuals)
 
     if params['MULTICORE']:

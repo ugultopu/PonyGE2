@@ -1,3 +1,5 @@
+import itertools
+
 from fitness.evaluation import evaluate_fitness
 from operators.crossover import crossover
 from operators.mutation import mutation
@@ -12,7 +14,7 @@ def step(individuals):
         Variation
         Evaluation
         Replacement
-    
+
     :param individuals: The current generation, upon which a single
     evolutionary generation will be imposed.
     :return: The next generation of the population.
@@ -20,6 +22,9 @@ def step(individuals):
 
     # Select parents from the original population.
     parents = selection(individuals)
+
+    print('len(parents) + 1 are:', len(parents) + 1)
+    # print('parents are:', parents)
 
     # Crossover parents and add to the new population.
     cross_pop = crossover(parents)
@@ -35,9 +40,11 @@ def step(individuals):
 
     # Generate statistics for run so far
     get_stats(individuals)
-    
+
     return individuals
 
+# def selection(individuals):
+#     for combo in itertools.combinations(individuals, 2):
 
 def steady_state_step(individuals):
     """
@@ -48,7 +55,7 @@ def steady_state_step(individuals):
     evolutionary generation will be imposed.
     :return: The next generation of the population.
     """
-    
+
     individuals = steady_state(individuals)
-    
-    return individuals 
+
+    return individuals

@@ -1,3 +1,5 @@
+import itertools
+
 from random import sample
 
 from algorithm.parameters import params
@@ -16,6 +18,25 @@ def selection(population):
 
     return params['SELECTION'](population)
 
+def cluster(population):
+    combinations = []
+
+    for combo in itertools.combinations(population, 2):
+        phenotype_0_length = len(combo[0])
+        phenotype_1_length = len(combo[1])
+        if phenotype_0_length < phenotype_1_length:
+            short_phenotype_length = phenotype_0_length
+            long_phenotype_length = phenotype_1_length
+        else:
+            short_phenotype_length = phenotype_1_length
+            long_phenotype_length = phenotype_0_length
+
+        for i, (unit_0, unit_1) in enumerate(zip(combo[0], combo[1])):
+            if unit_0 != unit_1:
+                combinations.append([i, short_phenotype_length + long_phenotype_length - 2 * i])
+                break
+            if i == short_phenotype_length - 1:
+                combinations.append([short_phenotype_length, long_phenotype_length - short_phenotype_length])
 
 def tournament(population):
     """
@@ -44,6 +65,7 @@ def tournament(population):
         winners.append(max(competitors))
 
     # Return the population of tournament winners.
+    print('len(winners) + 1 is', len(winners) + 1)
     return winners
 
 
@@ -73,7 +95,7 @@ def nsga2_selection(population):
     than sorting the population according to their front rank. The
     list returned contains references to the input *population*. For more
     details on the NSGA-II operator see [Deb2002]_.
-    
+
     :param population: A population from which to select individuals.
     :returns: A list of selected individuals.
     .. [Deb2002] Deb, Pratab, Agarwal, and Meyarivan, "A fast elitist
@@ -113,18 +135,18 @@ def pareto_tournament(population, pareto, tournament_size):
     :param tournament_size: The size of the tournament.
     :return: The selected individuals.
     """
-    
+
     # Initialise no best solution.
     best = None
-    
+
     # Randomly sample *tournament_size* participants.
     participants = sample(population, tournament_size)
-    
+
     for participant in participants:
         if best is None or crowded_comparison_operator(participant, best,
                                                        pareto):
             best = participant
-    
+
     return best
 
 

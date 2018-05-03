@@ -1,5 +1,9 @@
 #! /usr/bin/env python
 
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
+
 # PonyGE2
 # Copyright (c) 2017 Michael Fenton, James McDermott,
 #                    David Fagan, Stefan Forstenlechner,
@@ -20,6 +24,8 @@ def mane():
     """ Run program """
 
     # Run evolution
+    print('params are')
+    pp.pprint(params)
     individuals = params['SEARCH_LOOP']()
 
     # Print final review
