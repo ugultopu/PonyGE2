@@ -10,7 +10,7 @@ def search_loop():
     """
     This is a standard search process for an evolutionary algorithm. Loop over
     a given number of generations.
-
+    
     :return: The final population after the evolutionary process has run for
     the specified number of generations.
     """
@@ -51,23 +51,23 @@ def search_loop_from_state():
     :return: The final population after the evolutionary process has run for
     the specified number of generations.
     """
-
+    
     individuals = trackers.state_individuals
-
+    
     if params['MULTICORE']:
         # initialize pool once, if mutlicore is enabled
         params['POOL'] = Pool(processes=params['CORES'], initializer=pool_init,
                               initargs=(params,))  # , maxtasksperchild=1)
-
+    
     # Traditional GE
     for generation in range(stats['gen'] + 1, (params['GENERATIONS'] + 1)):
         stats['gen'] = generation
-
+        
         # New generation
         individuals = params['STEP'](individuals)
-
+    
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).
         params['POOL'].close()
-
+    
     return individuals

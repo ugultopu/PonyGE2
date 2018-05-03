@@ -11,11 +11,19 @@ class string_match(base_ff):
     def __init__(self):
         # Initialise base fitness function class.
         super().__init__()
-
+        
         # Set target string.
         self.target = params['TARGET']
 
     def evaluate(self, ind, **kwargs):
-        with open(params['FILE_PATH'] + '/phenotypes.txt', 'a') as phenotypes:
-            phenotypes.write(ind.phenotype + '\n')
-        return 1
+        guess = ind.phenotype
+        fitness = max(len(self.target), len(guess))
+        # Loops as long as the shorter of two strings
+        for (t_p, g_p) in zip(self.target, guess):
+            if t_p == g_p:
+                # Perfect match.
+                fitness -= 1
+            else:
+                # Imperfect match, find ASCII distance to match.
+                fitness -= 1 / (1 + (abs(ord(t_p) - ord(g_p))))
+        return fitness
