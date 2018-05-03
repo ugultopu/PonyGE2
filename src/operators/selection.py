@@ -1,9 +1,15 @@
-from random import sample
+import numpy
+import random
+import itertools
+
+from sklearn.cluster import KMeans
 
 from algorithm.parameters import params
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
 
+# FIXME Read this from 'params'
+NUMBER_OF_CLUSTERS = 5
 
 def selection(population):
     """
@@ -14,8 +20,68 @@ def selection(population):
     :return: selected population
     """
 
-    return params['SELECTION'](population)
+    # FIXME Specify 'clustering' in 'params'
+    return clustering(population)
 
+def clustering(population):
+    # Weed out the invalid individuals
+    population = [i for i in population if not i.invalid]
+
+    combinations = list(itertools.combinations(population, 2))
+    differences_in_combinations = []
+
+    for combo in combinations:
+        # Sometimes, the phenotype is 'None'. The following if, elif is to
+        # accomodate for those cases.
+        if combo[0].phenotype is None:
+            differences_in_combinations.append((0, len(combo[1].phenotype)))
+            break
+        elif combo[1].phenotype is None:
+            differences_in_combinations.append((0, len(combo[0].phenotype)))
+            break
+        # print('combo[0].phenotype is', combo[0].phenotype)
+        # print('combo[1].phenotype is', combo[1].phenotype)
+        phenotype_0_length = len(combo[0].phenotype)
+        phenotype_1_length = len(combo[1].phenotype)
+        if phenotype_0_length < phenotype_1_length:
+            short_phenotype_length = phenotype_0_length
+            long_phenotype_length = phenotype_1_length
+        else:
+            short_phenotype_length = phenotype_1_length
+            long_phenotype_length = phenotype_0_length
+
+        for i, (unit_0, unit_1) in enumerate(zip(combo[0].phenotype, combo[1].phenotype)):
+            if unit_0 != unit_1:
+                differences_in_combinations.append((i, short_phenotype_length + long_phenotype_length - 2 * i))
+                break
+            if i == short_phenotype_length - 1:
+                differences_in_combinations.append((short_phenotype_length, long_phenotype_length - short_phenotype_length))
+
+    differences_in_combinations = numpy.array(differences_in_combinations)
+
+    clusters = KMeans(n_clusters=NUMBER_OF_CLUSTERS).fit_predict(differences_in_combinations)
+
+    partitioned_clusters = []
+
+    for n in range(NUMBER_OF_CLUSTERS):
+        partitioned_clusters.append([i for i, e in enumerate(clusters) if e == n])
+
+    parents = []
+
+    # print("params['GENERATION_SIZE'] is", params['GENERATION_SIZE'])
+    # print("type(params['GENERATION_SIZE']) is", type(params['GENERATION_SIZE']))
+
+    for _ in range(int(params['GENERATION_SIZE'] / 2)):
+        # Sometimes, no combos in a given cluster exists. The following while
+        # loop is to accomodate for those cases.
+        cluster_index = random.randrange(0, NUMBER_OF_CLUSTERS)
+        while len(partitioned_clusters[cluster_index]) == 0:
+            cluster_index = random.randrange(0, NUMBER_OF_CLUSTERS)
+
+        selected_combo_index = random.choice(partitioned_clusters[cluster_index])
+        parents.extend(combinations[selected_combo_index])
+
+    return parents
 
 def tournament(population):
     """
@@ -38,7 +104,7 @@ def tournament(population):
     while len(winners) < params['GENERATION_SIZE']:
         # Randomly choose TOURNAMENT_SIZE competitors from the given
         # population. Allows for re-sampling of individuals.
-        competitors = sample(available, params['TOURNAMENT_SIZE'])
+        competitors = random.sample(available, params['TOURNAMENT_SIZE'])
 
         # Return the single best competitor.
         winners.append(max(competitors))
@@ -73,7 +139,7 @@ def nsga2_selection(population):
     than sorting the population according to their front rank. The
     list returned contains references to the input *population*. For more
     details on the NSGA-II operator see [Deb2002]_.
-    
+
     :param population: A population from which to select individuals.
     :returns: A list of selected individuals.
     .. [Deb2002] Deb, Pratab, Agarwal, and Meyarivan, "A fast elitist
@@ -113,18 +179,18 @@ def pareto_tournament(population, pareto, tournament_size):
     :param tournament_size: The size of the tournament.
     :return: The selected individuals.
     """
-    
+
     # Initialise no best solution.
     best = None
-    
+
     # Randomly sample *tournament_size* participants.
     participants = sample(population, tournament_size)
-    
+
     for participant in participants:
         if best is None or crowded_comparison_operator(participant, best,
                                                        pareto):
             best = participant
-    
+
     return best
 
 
