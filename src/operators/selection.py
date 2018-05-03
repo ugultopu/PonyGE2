@@ -20,10 +20,8 @@ def selection(population):
     return params['SELECTION'](population)
 
 def clustering(population):
-    # Weed out the invalid individuals
-    population = [i for i in population if not i.invalid]
-
-    combinations = list(itertools.combinations(population, 2))
+    # Weed out the invalid individuals before finding combinations
+    combinations = list(itertools.combinations([i for i in population if not i.invalid], 2))
     differences_in_combinations = []
 
     for combo in combinations:
@@ -47,10 +45,7 @@ def clustering(population):
 
     clusters = KMeans(n_clusters=params['NUMBER_OF_CLUSTERS']).fit_predict(differences_in_combinations)
 
-    partitioned_clusters = []
-
-    for n in range(params['NUMBER_OF_CLUSTERS']):
-        partitioned_clusters.append([i for i, e in enumerate(clusters) if e == n])
+    partitioned_clusters = [ [i for i, e in enumerate(clusters) if e == n] for n in range(params['NUMBER_OF_CLUSTERS']) ]
 
     parents = []
 
