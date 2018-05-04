@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from algorithm.parameters import params
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
+from utilities.population import get_valid_individuals
 
 def selection(population):
     """
@@ -21,7 +22,7 @@ def selection(population):
 
 def clustering(population):
     # Weed out the invalid individuals before finding combinations
-    combinations = list(itertools.combinations([i for i in population if not i.invalid], 2))
+    combinations = list(itertools.combinations(get_valid_individuals(population), 2))
     differences_in_combinations = []
 
     for combo in combinations:
