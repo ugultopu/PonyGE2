@@ -47,6 +47,7 @@ def clustering(population):
 
     clusters = k_means.fit_predict(differences_in_combinations)
 
+    # Save the phenotypes that are closest to the center of the clusters.
     with open(path.join(params['FILE_PATH'], 'cluster_center_phenotypes.txt'), 'a') as f:
         for cluster_center in k_means.cluster_centers_:
             closest_combo = min(differences_in_combinations, key=lambda diff:hypot(diff[0] - cluster_center[0], diff[1] - cluster_center[1]))
