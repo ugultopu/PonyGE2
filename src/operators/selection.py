@@ -1,7 +1,7 @@
-import numpy
 import random
 import itertools
 
+from math import hypot
 from sklearn.cluster import KMeans
 
 from algorithm.parameters import params
@@ -42,9 +42,21 @@ def clustering(population):
             if i == short_phenotype_length - 1:
                 differences_in_combinations.append((short_phenotype_length, long_phenotype_length - short_phenotype_length))
 
-    differences_in_combinations = numpy.array(differences_in_combinations)
+    k_means = KMeans(n_clusters=params['NUMBER_OF_CLUSTERS'])
 
-    clusters = KMeans(n_clusters=params['NUMBER_OF_CLUSTERS']).fit_predict(differences_in_combinations)
+    clusters = k_means.fit_predict(differences_in_combinations)
+
+    print('clusters are', clusters)
+    # print('cluster centers are', k_means.cluster_centers_)
+
+    for cluster_center in k_means.cluster_centers_:
+        print('cluster_center is', cluster_center)
+        closest_combo = min(differences_in_combinations, key=lambda diff:hypot(diff[0] - cluster_center[0], diff[1] - cluster_center[1]))
+        print('closest_combo is', closest_combo)
+        index_of_closest_combo = differences_in_combinations.index(closest_combo)
+        print('index of closest combo', index_of_closest_combo)
+        phenotypes = combinations[index_of_closest_combo]
+        print('phenotypes in this index are', phenotypes[0], phenotypes[1])
 
     partitioned_clusters = [ [i for i, e in enumerate(clusters) if e == n] for n in range(params['NUMBER_OF_CLUSTERS']) ]
 
