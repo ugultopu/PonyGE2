@@ -1,6 +1,7 @@
 import random
 import itertools
 
+from os import path
 from math import hypot
 from sklearn.cluster import KMeans
 
@@ -46,22 +47,20 @@ def clustering(population):
 
     clusters = k_means.fit_predict(differences_in_combinations)
 
-    print('clusters are', clusters)
-    # print('cluster centers are', k_means.cluster_centers_)
+    with open(path.join(params['FILE_PATH'], 'cluster_center_phenotypes.txt'), 'a') as f:
+        for cluster_center in k_means.cluster_centers_:
+            closest_combo = min(differences_in_combinations, key=lambda diff:hypot(diff[0] - cluster_center[0], diff[1] - cluster_center[1]))
+            closest_individuals = combinations[differences_in_combinations.index(closest_combo)]
+            f.write(closest_individuals[0].phenotype + '\n')
+            f.write(closest_individuals[1].phenotype + '\n')
 
-    for cluster_center in k_means.cluster_centers_:
-        print('cluster_center is', cluster_center)
-        closest_combo = min(differences_in_combinations, key=lambda diff:hypot(diff[0] - cluster_center[0], diff[1] - cluster_center[1]))
-        print('closest_combo is', closest_combo)
-        index_of_closest_combo = differences_in_combinations.index(closest_combo)
-        print('index of closest combo', index_of_closest_combo)
-        phenotypes = combinations[index_of_closest_combo]
-        print('phenotypes in this index are', phenotypes[0], phenotypes[1])
-
+    # Put the combination indices of every cluster to a seperate array.
     partitioned_clusters = [ [i for i, e in enumerate(clusters) if e == n] for n in range(params['NUMBER_OF_CLUSTERS']) ]
 
     parents = []
 
+    # Select a random cluster and a random combo from that cluster and add the
+    # two phenotypes to the parents list.
     for _ in range(int(params['GENERATION_SIZE'] / 2)):
         parents.extend(combinations[random.choice(partitioned_clusters[random.randrange(0, params['NUMBER_OF_CLUSTERS'])])])
 
