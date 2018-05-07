@@ -63,7 +63,13 @@ def clustering(population):
     # Select a random cluster and a random combo from that cluster and add the
     # two phenotypes to the parents list.
     for _ in range(int(params['GENERATION_SIZE'] / 2)):
-        parents.extend(combinations[random.choice(partitioned_clusters[random.randrange(0, params['NUMBER_OF_CLUSTERS'])])])
+        selected_cluster_index = random.randrange(0, params['NUMBER_OF_CLUSTERS'])
+        # FIXME Consider using a dictionary instead of a tuple to express the
+        # cluster indices of the parents. If you do this, you need to edit the
+        # code about clustering in 'src/operators/crossover.py' as well.
+        parents.extend(
+            [ (i, selected_cluster_index) for i in combinations[random.choice(partitioned_clusters[selected_cluster_index])] ]
+        )
 
     return parents
 
