@@ -6,9 +6,9 @@ from math import hypot
 from sklearn.cluster import KMeans
 
 from algorithm.parameters import params
+from utilities.population import get_valid_individuals
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
-from utilities.population import get_valid_individuals
 
 def selection(population):
     """
@@ -22,8 +22,12 @@ def selection(population):
     return params['SELECTION'](population)
 
 def clustering(population):
-    # Weed out the invalid individuals before finding combinations
-    combinations = list(itertools.combinations(get_valid_individuals(population), 2))
+    # Weed out the invalid individuals and sort the individuals by their fitness
+    population = sorted(get_valid_individuals(population), key=lambda individual: individual.fitness)
+
+    # Get 2-combination of the population
+    # combinations = list(itertools.combinations(population, 2))
+
     differences_in_combinations = []
 
     for combo in combinations:
