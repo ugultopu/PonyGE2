@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 
 from algorithm.parameters import params
 from utilities.population import get_valid_individuals
+from utilities.population import get_fittest_population
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
 
@@ -22,11 +23,10 @@ def selection(population):
     return params['SELECTION'](population)
 
 def clustering(population):
-    # Weed out the invalid individuals and sort the individuals by their fitness
-    population = sorted(get_valid_individuals(population), key=lambda individual: individual.fitness)
+    population = get_fittest_population(population)
 
     # Get 2-combination of the population
-    # combinations = list(itertools.combinations(population, 2))
+    combinations = list(itertools.combinations(population, 2))
 
     differences_in_combinations = []
 
@@ -66,7 +66,7 @@ def clustering(population):
 
     # Select a random cluster and a random combo from that cluster and add the
     # two phenotypes to the parents list.
-    for _ in range(int(params['GENERATION_SIZE'] / 2)):
+    for _ in range(int((params['GENERATION_SIZE'] * params['CLUSTERING_RATIO']) / 2)):
         selected_cluster_index = random.randrange(0, params['NUMBER_OF_CLUSTERS'])
         # FIXME Consider using a dictionary instead of a tuple to express the
         # cluster indices of the parents. If you do this, you need to edit the

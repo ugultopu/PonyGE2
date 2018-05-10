@@ -21,7 +21,9 @@ def crossover(parents):
     # Initialise an empty population.
     cross_pop = []
 
-    while len(cross_pop) < params['GENERATION_SIZE']:
+    crossover_count = int(params['GENERATION_SIZE'] * params['CLUSTERING_RATIO']) if params['SELECTION'].__name__ == 'clustering' else params['GENERATION_SIZE']
+
+    while len(cross_pop) < crossover_count:
 
         # Randomly choose two parents from the parent population.
         inds_in = sample(parents, 2)
