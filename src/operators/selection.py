@@ -71,6 +71,8 @@ def clustering(population):
         # FIXME Consider using a dictionary instead of a tuple to express the
         # cluster indices of the parents. If you do this, you need to edit the
         # code about clustering in 'src/operators/crossover.py' as well.
+        while len(partitioned_clusters[selected_cluster_index]) == 0:
+            selected_cluster_index = random.randrange(0, params['NUMBER_OF_CLUSTERS'])
         parents.extend(
             [ (i, selected_cluster_index) for i in combinations[random.choice(partitioned_clusters[selected_cluster_index])] ]
         )
