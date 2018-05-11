@@ -17,5 +17,4 @@ POPULATION_SIZE:        500
 FITNESS_FUNCTION:       l_systems
 REPLACEMENT:            generational
 SELECTION:              clustering
-TARGET:                 FF+F+F+FBF-FFF+F
 TOURNAMENT_SIZE:        2
