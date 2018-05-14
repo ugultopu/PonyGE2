@@ -5,11 +5,12 @@ from os import path
 from math import hypot
 from sklearn.cluster import KMeans
 
+from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
+    crowded_comparison_operator
 from algorithm.parameters import params
 from utilities.population import get_valid_individuals
 from utilities.population import get_fittest_population
-from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
-    crowded_comparison_operator
+from utilities.stats import trackers
 
 def selection(population):
     """
@@ -56,6 +57,7 @@ def clustering(population):
         for cluster_center in k_means.cluster_centers_:
             closest_combo = min(differences_in_combinations, key=lambda diff:hypot(diff[0] - cluster_center[0], diff[1] - cluster_center[1]))
             closest_individuals = combinations[differences_in_combinations.index(closest_combo)]
+            trackers.cluster_center_phenotypes.append(closest_individuals[0].phenotype)
             f.write(closest_individuals[0].phenotype + '\n')
             f.write(closest_individuals[1].phenotype + '\n')
 

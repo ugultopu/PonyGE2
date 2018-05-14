@@ -7,7 +7,10 @@
 # Hereby licensed under the GNU GPL v3.
 """ Python GE implementation """
 
+from algorithm.parameters import params
 from utilities.algorithm.general import check_python_version
+from utilities.stats.save_plots import draw_and_save_turtle_plot
+from utilities.stats import trackers
 
 check_python_version()
 
@@ -24,6 +27,13 @@ def mane():
 
     # Print final review
     get_stats(individuals, end=True)
+
+    draw_last_generation_cluster_center_phenotypes()
+
+
+def draw_last_generation_cluster_center_phenotypes():
+    for idx, phenotype in enumerate(trackers.cluster_center_phenotypes[-params['NUMBER_OF_CLUSTERS']:]):
+        draw_and_save_turtle_plot(phenotype, 'fitness_of_the_center_of_cluster_' + str(idx))
 
 
 if __name__ == "__main__":

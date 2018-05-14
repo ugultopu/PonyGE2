@@ -1,13 +1,30 @@
+import turtle
+
 import matplotlib
 import pandas as pd
 from os import path, pathsep
 import numpy as np
 
+from algorithm.parameters import params
 from utilities.stats.trackers import first_pareto_list
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 plt.rc('font', family='Times New Roman')
+
+
+def draw_and_save_turtle_plot(phenotype, filename):
+    turtle.reset()
+    for move in phenotype:
+        if move == 'F':
+            turtle.forward(100)
+        elif move == 'B':
+            turtle.backward(100)
+        elif move == '+':
+            turtle.left(90)
+        elif move == '-':
+            turtle.right(90)
+    turtle.getscreen().getcanvas().postscript(file=path.join(params['FILE_PATH'], filename + '.eps'))
 
 
 def save_pareto_fitness_plot():
