@@ -73,6 +73,8 @@ def get_stats(individuals, end=False):
         # Save the state of the current evolutionary run.
         create_state(individuals)
 
+    save_plot_from_data(trackers.average_fitness_list, 'average_fitness')
+
 
 def get_soo_stats(individuals, end):
     """
@@ -329,6 +331,7 @@ def update_stats(individuals, end):
         # Fitness Stats
         fitnesses = [i.fitness for i in individuals]
         stats['ave_fitness'] = np.nanmean(fitnesses, axis=0)
+        trackers.average_fitness_list.append(stats['ave_fitness'])
         stats['best_fitness'] = trackers.best_ever.fitness
 
 
