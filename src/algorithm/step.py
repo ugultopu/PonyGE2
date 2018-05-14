@@ -20,6 +20,11 @@ def step(individuals):
     :return: The next generation of the population.
     """
 
+    if params['PRINT_PHENOTYPE_FITNESS'] == True:
+        print('fitness of the individuals are:')
+        for individual in get_fittest_population(individuals):
+            print(str(individual.fitness) + ' ' + str(individual.phenotype))
+
     # Select parents from the original population.
     parents = selection(individuals)
 
