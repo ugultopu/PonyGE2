@@ -3,13 +3,13 @@ from fitness.base_ff_classes.base_ff import base_ff
 
 def get_position_difference_for_direction(direction):
     if direction == 'EAST':
-        return (1, 0)
+        return [1, 0]
     elif direction == 'NORTH':
-        return (0, 1)
+        return [0, 1]
     elif direction == 'WEST':
-        return (-1, 0)
+        return [-1, 0]
     elif direction == 'SOUTH':
-        return (0, -1)
+        return [0, -1]
     else:
         raise ValueError('Unknown direction', direction)
 
@@ -30,7 +30,7 @@ class l_systems(base_ff):
 
     def evaluate(self, ind, **kwargs):
         # X and Y position
-        position = (0, 0)
+        position = [0, 0]
         direction = 'EAST'
         area = 0
         for move in ind.phenotype:
@@ -40,7 +40,7 @@ class l_systems(base_ff):
                 # If we're going east, we increase the area as much as the
                 # current Y value.
                 if direction == 'EAST': area += position[1]
-                position += get_position_difference_for_direction(direction)
+                position = [a + b for a, b in zip(position, get_position_difference_for_direction(direction))]
                 # If we end up below the ground or left of the origin, stop.
                 if position[0] < 0 or position[1] < 0: break
             # If we're not moving forward, this means that we're rotating, since
@@ -49,4 +49,4 @@ class l_systems(base_ff):
             else:
                 direction = get_next_direction(direction, move)
 
-        return 0 if area == 0 else 1 - 1 / area
+        return area
