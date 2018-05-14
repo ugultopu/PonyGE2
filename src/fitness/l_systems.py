@@ -49,4 +49,4 @@ class l_systems(base_ff):
             else:
                 direction = get_next_direction(direction, move)
 
-        return area
+        return 1 / (area + 1)
