@@ -67,7 +67,7 @@ def clustering(population):
 
     # Select a random cluster and a random combo from that cluster and add the
     # two phenotypes to the parents list.
-    for _ in range(int((params['GENERATION_SIZE'] * params['CLUSTERING_RATIO']) / 2)):
+    for _ in range(int((params['POPULATION_SIZE'] * params['CLUSTERING_RATIO']) / 2)):
         selected_cluster_index = random.randrange(0, params['NUMBER_OF_CLUSTERS'])
         # FIXME Consider using a dictionary instead of a tuple to express the
         # cluster indices of the parents. If you do this, you need to edit the
