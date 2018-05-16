@@ -32,21 +32,29 @@ class l_systems(base_ff):
         # X and Y position
         position = [0, 0]
         direction = 'EAST'
+        latest_forward_direction = 'EAST'
         area = 0
+        number_of_corners = 0
         for move in ind.phenotype:
             if move == 'F':
                 # If we start going west, don't evaluate the rest.
                 if direction == 'WEST': break
-                # If we're going east, we increase the area as much as the
-                # current Y value.
-                if direction == 'EAST': area += position[1]
+                # Get the new position
                 position = [a + b for a, b in zip(position, get_position_difference_for_direction(direction))]
                 # If we end up below the ground or left of the origin, stop.
                 if position[0] < 0 or position[1] < 0: break
+                # If we're going east, we increase the area as much as the
+                # current Y value.
+                if direction == 'EAST': area += position[1]
+                # Increase the number of corners if we started facing another
+                # direction.
+                if direction != latest_forward_direction: number_of_corners += 1
+                # Update the latest forward direction.
+                latest_forward_direction = direction
             # If we're not moving forward, this means that we're rotating, since
             # the only other options apart from 'F' are '+' and '-', which
             # correspond to rotating counter-clockwise and clockwise.
             else:
                 direction = get_next_direction(direction, move)
 
-        return 1 / (area + 1)
+        return 1 / ( (area + 1) + (number_of_corners * 10) )
