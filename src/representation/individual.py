@@ -61,9 +61,9 @@ class Individual(object):
                     return self.fitness < other.fitness
         else:
             if np.isnan(self.fitness):
-                # Self.fitness is not a number, return False as it doesn't
+                # Self.fitness is not a number, return True as it doesn't
                 # matter what the other fitness is.
-                return False
+                return True
             else:
                 if np.isnan(other.fitness):
                     return False
@@ -98,22 +98,21 @@ class Individual(object):
             if np.isnan(self.fitness):
                 # Self.fitness is not a number, return False as it doesn't
                 # matter what the other fitness is.
-                return False
+                return True
             else:
                 if np.isnan(other.fitness):
                     return False
                 else:
                     return other.fitness <= self.fitness
 
-    def __str__(self):
+    def __repr__(self):
         """
         Generates a string by which individuals can be identified. Useful
         for printing information about individuals.
 
         :return: A string describing the individual.
         """
-        return ("Individual: " +
-                str(self.phenotype) + "; " + str(self.fitness))
+        return f'{self.fitness} {self.phenotype}'
 
     def deep_copy(self):
         """

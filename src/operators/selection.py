@@ -8,7 +8,6 @@ from sklearn.cluster import KMeans
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
 from algorithm.parameters import params
-from utilities.population import get_valid_individuals
 from utilities.population import get_fittest_population
 from utilities.stats import trackers
 

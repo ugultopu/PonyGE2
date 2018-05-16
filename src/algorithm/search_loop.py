@@ -7,7 +7,6 @@ from stats.stats import stats, get_stats
 from utilities.stats import trackers
 from operators.initialisation import initialisation
 from utilities.algorithm.initialise_run import pool_init
-from utilities.population import get_valid_individuals
 
 def search_loop():
     """
@@ -39,10 +38,10 @@ def search_loop():
         # New generation
         individuals = params['STEP'](individuals)
 
-        # Save the phenotypes of the valid individuals of the last generation
+        # Save the phenotypes of the last generation
         if generation == params['GENERATIONS']:
             with open(path.join(params['FILE_PATH'], 'last_generation_phenotypes.txt'), 'a') as f:
-                for individual in get_valid_individuals(individuals):
+                for individual in individuals:
                     f.write(individual.phenotype + '\n')
 
     if params['MULTICORE']:

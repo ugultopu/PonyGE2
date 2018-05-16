@@ -22,8 +22,7 @@ def step(individuals):
 
     if params['PRINT_PHENOTYPE_FITNESS'] == True:
         print('fitness of the individuals are:')
-        for individual in get_fittest_population(individuals):
-            print(str(individual.fitness) + ' ' + str(individual.phenotype))
+        print(*sorted(individuals), sep='\n')
 
     # Select parents from the original population.
     parents = selection(individuals)
