@@ -6,4 +6,4 @@ def get_valid_individuals(population):
 # Gets the most fit part of the population by removing the least fit
 # params['CLUSTERING_RATIO'] part of the population.
 def get_fittest_population(population):
-    return sorted(get_valid_individuals(population), key=lambda individual: individual.fitness, reverse=True)[int(len(population) * params['CLUSTERING_RATIO']):]
+    return sorted(get_valid_individuals(population))[int(len(population) * params['CLUSTERING_RATIO']):]
