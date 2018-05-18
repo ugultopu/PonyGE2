@@ -1,6 +1,8 @@
 from algorithm.parameters import params
 from fitness.base_ff_classes.base_ff import base_ff
 
+DIRECTIONS = ['EAST', 'NORTH', 'WEST', 'SOUTH']
+
 def get_position_difference_for_direction(direction):
     if direction == 'EAST':
         return [1, 0]
@@ -14,8 +16,6 @@ def get_position_difference_for_direction(direction):
         raise ValueError('Unknown direction', direction)
 
 def get_next_direction(direction, turn_direction):
-    DIRECTIONS = ['EAST', 'NORTH', 'WEST', 'SOUTH']
-
     if turn_direction == '+':
         return DIRECTIONS[(DIRECTIONS.index(direction) + 1) % len(DIRECTIONS)]
     elif turn_direction == '-':
@@ -48,7 +48,7 @@ class l_systems(base_ff):
                 if direction == 'EAST': area += position[1]
                 # Increase the number of corners if we started facing another
                 # direction.
-                if direction != latest_forward_direction: number_of_corners += 1
+                if DIRECTIONS.index(direction) % 2 != DIRECTIONS.index(latest_forward_direction) % 2: number_of_corners += 1
                 # Update the latest forward direction.
                 latest_forward_direction = direction
             # If we're not moving forward, this means that we're rotating, since
