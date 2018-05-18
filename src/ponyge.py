@@ -20,6 +20,9 @@ import sys
 
 
 def mane():
+    for _ in range(params['NUMBER_OF_CLUSTERS']):
+        trackers.average_cluster_fitness.append([])
+
     """ Run program """
 
     # Run evolution

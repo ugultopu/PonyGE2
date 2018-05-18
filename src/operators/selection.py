@@ -5,6 +5,8 @@ from os import path
 from math import hypot
 from sklearn.cluster import KMeans
 
+import numpy as np
+
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
 from algorithm.parameters import params
@@ -21,6 +23,13 @@ def selection(population):
     """
 
     return params['SELECTION'](population)
+
+def get_individuals_for_cluster(combinations, partitioned_cluster):
+    individuals = []
+    for i in partitioned_cluster:
+        individuals.extend(combinations[i])
+    return individuals
+
 
 def clustering(population):
     population = get_fittest_population(population)
@@ -62,6 +71,11 @@ def clustering(population):
 
     # Put the combination indices of every cluster to a seperate array.
     partitioned_clusters = [ [i for i, e in enumerate(clusters) if e == n] for n in range(params['NUMBER_OF_CLUSTERS']) ]
+
+    for idx, cluster in enumerate(partitioned_clusters):
+        cluster_individuals = get_individuals_for_cluster(combinations, cluster)
+        fitnesses = [i.fitness for i in cluster_individuals]
+        trackers.average_cluster_fitness[idx].append(np.nanmean(fitnesses, axis=0))
 
     parents = []
 

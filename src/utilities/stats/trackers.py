@@ -17,6 +17,8 @@ best_fitness_list = []
 
 average_fitness_list = []
 
+average_cluster_fitness = []
+
 first_pareto_list = []
 # first_pareto_list stores the list of all individuals stored on the first
 # pareto front during multi objective optimisation.

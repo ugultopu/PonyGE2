@@ -42,7 +42,7 @@ def search_loop():
         if generation == params['GENERATIONS']:
             with open(path.join(params['FILE_PATH'], 'last_generation_phenotypes.txt'), 'a') as f:
                 for individual in individuals:
-                    f.write(individual.phenotype + '\n')
+                    if individual.phenotype is not None: f.write(individual.phenotype + '\n')
 
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).
