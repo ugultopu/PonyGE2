@@ -37,10 +37,10 @@ class Population:
 
 
         self.combinations = list(combinations(self.fittest_individuals(), 2))
-        # FIXME We might need to make 'combo_diffs' an instance variable in
+        # FIXME We might need to make '_combo_diffs' an instance variable in
         # order to calculate the cluster centers.
-        combo_diffs = [combo_diffs(combo) for combo in self.combinations]
-        self._clusters = self.k_means.fit_predict(combo_diffs)
+        _combo_diffs = [combo_diffs(combo) for combo in self.combinations]
+        self._clusters = self.k_means.fit_predict(_combo_diffs)
         self.clusters()
 
 
@@ -57,7 +57,5 @@ class Population:
         """Get a set of parents from this population"""
         if self._parents is not None: return self._parents
 
-        self._parents = {}
-        while len(self._parents) < int(len(population) * cut_off_ratio):
-            self._parents.add( choice(choice(self.cluster_individuals())) )
+        self._parents = { choice(choice(self.cluster_individuals())) for _ in range(int(len(population) * cut_off_ratio)) }
         self.parents()
