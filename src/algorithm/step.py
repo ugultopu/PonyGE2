@@ -4,8 +4,8 @@ from operators.crossover import crossover
 from operators.mutation import mutation
 from operators.replacement import replacement, steady_state
 from operators.selection import selection
+from representation.population import Population
 from stats.stats import get_stats
-from utilities.population import get_fittest_population
 
 def step(individuals):
     """
@@ -35,7 +35,7 @@ def step(individuals):
 
     # If clustering, carry over the fittest 80% to the new population.
     if params['SELECTION'].__name__ == 'clustering':
-        new_pop.extend(get_fittest_population(individuals))
+        new_pop.extend(Population(individuals, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS']).fittest_individuals())
 
     # Evaluate the fitness of the new population.
     new_pop = evaluate_fitness(new_pop)

@@ -22,40 +22,45 @@ class Population:
 
     def clusters(self):
         """Clusterize the population"""
-        if self._clusters is not None: return self._clusters
+        try: return self._clusters
+        except AttributeError:
+            def combo_diffs(combo):
+                """Calculate the length of the phenotypes that match from the
+                beginning and the length that does not match"""
+                phenotype_0 = combo[0].phenotype
+                phenotype_1 = combo[1].phenotype
+                for i, (t0, t1) in enumerate(zip(phenotype_0, phenotype_1)):
+                    if t0 != t1:
+                        return (i, len(phenotype_0) + len(phenotype_1) - 2 * i)
+                return (i, abs(len(phenotype_0) - len(phenotype_1)))
 
 
-        def combo_diffs(combo):
-            """Calculate the length of the phenotypes that match from the
-            beginning and the length that does not match"""
-            phenotype_0 = combo[0].phenotype
-            phenotype_1 = combo[1].phenotype
-            for i, (t0, t1) in enumerate(zip(phenotype_0, phenotype_1)):
-                if t0 != t1:
-                    return (i, len(phenotype_0) + len(phenotype_1) - 2 * i)
-            return (i, abs(len(phenotype_0) - len(phenotype_1)))
-
-
-        self.combinations = list(combinations(self.fittest_individuals(), 2))
-        # FIXME We might need to make '_combo_diffs' an instance variable in
-        # order to calculate the cluster centers.
-        _combo_diffs = [combo_diffs(combo) for combo in self.combinations]
-        self._clusters = self.k_means.fit_predict(_combo_diffs)
-        self.clusters()
+            self.combinations = list(combinations(self.fittest_individuals(), 2))
+            # FIXME We might need to make '_combo_diffs' an instance variable in
+            # order to calculate the cluster centers.
+            _combo_diffs = [combo_diffs(combo) for combo in self.combinations]
+            self._clusters = self.k_means.fit_predict(_combo_diffs)
+            return self.clusters()
 
 
     def cluster_individuals(self):
-        """Return a set of individuals that belong to the specified cluster"""
-        if self._cluster_individuals is not None: return self._cluster_individuals
-
-        combo_indices_by_cluster = [ [i for i, e in enumerate(self.clusters()) if e == n] for n in range(self.number_of_clusters) ]
-        self._cluster_individuals = [ {i for i in self.combinations[combo_index] for combo_index in combo_indices} for combo_indices in combo_indices_by_cluster ]
-        self.cluster_individuals()
+        """Return a list of set of individuals. Each set in the list contains
+        the individuals of the respective cluster index."""
+        try: return self._cluster_individuals
+        except AttributeError:
+            clusters = self.clusters()
+            combo_indices_by_cluster = [ [i for i, e in enumerate(clusters) if e == n] for n in range(self.number_of_clusters) ]
+            self._cluster_individuals = [ {i for combo_index in combo_indices for i in self.combinations[combo_index] } for combo_indices in combo_indices_by_cluster ]
+            return self.cluster_individuals()
 
 
     def parents(self):
         """Get a set of parents from this population"""
-        if self._parents is not None: return self._parents
-
-        self._parents = { choice(choice(self.cluster_individuals())) for _ in range(int(len(population) * cut_off_ratio)) }
-        self.parents()
+        try: return self._parents
+        except AttributeError:
+            self._parents = set()
+            while len(self._parents) < int(len(self.individuals) * self.cut_off_ratio):
+                selected_cluster = choice(self.cluster_individuals())
+                while not selected_cluster: selected_cluster = choice(self.cluster_individuals())
+                self._parents.add( (choice(tuple(selected_cluster)), self.cluster_individuals().index(selected_cluster)) )
+            return self.parents()

@@ -48,27 +48,10 @@ class Individual(object):
         :return: Whether or not the fitness of the current individual is
         greater than the comparison individual.
         """
+        if np.isnan(self.fitness): return True
+        elif np.isnan(other.fitness): return False
+        else: return self.fitness < other.fitness if params['FITNESS_FUNCTION'].maximise else other.fitness < self.fitness
 
-        if params['FITNESS_FUNCTION'].maximise:
-            if np.isnan(self.fitness):
-                # Self.fitness is not a number, return True as it doesn't
-                # matter what the other fitness is.
-                return True
-            else:
-                if np.isnan(other.fitness):
-                    return False
-                else:
-                    return self.fitness < other.fitness
-        else:
-            if np.isnan(self.fitness):
-                # Self.fitness is not a number, return True as it doesn't
-                # matter what the other fitness is.
-                return True
-            else:
-                if np.isnan(other.fitness):
-                    return False
-                else:
-                    return other.fitness < self.fitness
 
     def __le__(self, other):
         """
@@ -84,26 +67,9 @@ class Individual(object):
         greater than or equal to the comparison individual.
         """
 
-        if params['FITNESS_FUNCTION'].maximise:
-            if np.isnan(self.fitness):
-                # Self.fitness is not a number, return True as it doesn't
-                # matter what the other fitness is.
-                return True
-            else:
-                if np.isnan(other.fitness):
-                    return False
-                else:
-                    return self.fitness <= other.fitness
-        else:
-            if np.isnan(self.fitness):
-                # Self.fitness is not a number, return False as it doesn't
-                # matter what the other fitness is.
-                return True
-            else:
-                if np.isnan(other.fitness):
-                    return False
-                else:
-                    return other.fitness <= self.fitness
+        if np.isnan(self.fitness): return True
+        elif np.isnan(other.fitness): return False
+        else: return self.fitness <= other.fitness if params['FITNESS_FUNCTION'].maximise else other.fitness <= self.fitness
 
     def __repr__(self):
         """

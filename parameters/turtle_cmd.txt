@@ -1,5 +1,5 @@
 CACHE:                   FALSE
-CLUSTERING_RATIO:        .2
+CUT_OFF_RATIO:           .2
 CODON_SIZE:              100000
 CROSSOVER:               variable_onepoint
 CROSSOVER_PROBABILITY:   0.55

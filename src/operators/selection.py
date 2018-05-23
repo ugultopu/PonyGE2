@@ -1,17 +1,9 @@
-import random
-import itertools
+from random import sample
 
-from os import path
-from math import hypot
-from sklearn.cluster import KMeans
-
-import numpy as np
-
+from representation.population import Population
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
 from algorithm.parameters import params
-from utilities.population import get_fittest_population
-from utilities.stats import trackers
 
 def selection(population):
     """
@@ -24,75 +16,9 @@ def selection(population):
 
     return params['SELECTION'](population)
 
-def get_individuals_for_cluster(combinations, partitioned_cluster):
-    individuals = []
-    for i in partitioned_cluster:
-        individuals.extend(combinations[i])
-    return individuals
-
 
 def clustering(population):
-    population = get_fittest_population(population)
-
-    # Get 2-combination of the population
-    combinations = list(itertools.combinations(population, 2))
-
-    differences_in_combinations = []
-
-    for combo in combinations:
-        phenotype_0_length = len(combo[0].phenotype)
-        phenotype_1_length = len(combo[1].phenotype)
-        if phenotype_0_length < phenotype_1_length:
-            short_phenotype_length = phenotype_0_length
-            long_phenotype_length = phenotype_1_length
-        else:
-            short_phenotype_length = phenotype_1_length
-            long_phenotype_length = phenotype_0_length
-
-        for i, (unit_0, unit_1) in enumerate(zip(combo[0].phenotype, combo[1].phenotype)):
-            if unit_0 != unit_1:
-                differences_in_combinations.append((i, short_phenotype_length + long_phenotype_length - 2 * i))
-                break
-            if i == short_phenotype_length - 1:
-                differences_in_combinations.append((short_phenotype_length, long_phenotype_length - short_phenotype_length))
-
-    k_means = KMeans(n_clusters=params['NUMBER_OF_CLUSTERS'])
-
-    clusters = k_means.fit_predict(differences_in_combinations)
-
-    # Save the phenotypes that are closest to the center of the clusters.
-    with open(path.join(params['FILE_PATH'], 'cluster_center_phenotypes.txt'), 'a') as f:
-        for cluster_center in k_means.cluster_centers_:
-            closest_combo = min(differences_in_combinations, key=lambda diff:hypot(diff[0] - cluster_center[0], diff[1] - cluster_center[1]))
-            closest_individuals = combinations[differences_in_combinations.index(closest_combo)]
-            trackers.cluster_center_phenotypes.append(closest_individuals[0].phenotype)
-            f.write(closest_individuals[0].phenotype + '\n')
-            f.write(closest_individuals[1].phenotype + '\n')
-
-    # Put the combination indices of every cluster to a seperate array.
-    partitioned_clusters = [ [i for i, e in enumerate(clusters) if e == n] for n in range(params['NUMBER_OF_CLUSTERS']) ]
-
-    for idx, cluster in enumerate(partitioned_clusters):
-        cluster_individuals = get_individuals_for_cluster(combinations, cluster)
-        fitnesses = [i.fitness for i in cluster_individuals]
-        trackers.average_cluster_fitness[idx].append(np.nanmean(fitnesses, axis=0))
-
-    parents = []
-
-    # Select a random cluster and a random combo from that cluster and add the
-    # two phenotypes to the parents list.
-    for _ in range(int((params['POPULATION_SIZE'] * params['CLUSTERING_RATIO']) / 2)):
-        selected_cluster_index = random.randrange(0, params['NUMBER_OF_CLUSTERS'])
-        # FIXME Consider using a dictionary instead of a tuple to express the
-        # cluster indices of the parents. If you do this, you need to edit the
-        # code about clustering in 'src/operators/crossover.py' as well.
-        while len(partitioned_clusters[selected_cluster_index]) == 0:
-            selected_cluster_index = random.randrange(0, params['NUMBER_OF_CLUSTERS'])
-        parents.extend(
-            [ (i, selected_cluster_index) for i in combinations[random.choice(partitioned_clusters[selected_cluster_index])] ]
-        )
-
-    return parents
+    return Population(population, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS']).parents()
 
 def tournament(population):
     """
@@ -115,7 +41,7 @@ def tournament(population):
     while len(winners) < params['GENERATION_SIZE']:
         # Randomly choose TOURNAMENT_SIZE competitors from the given
         # population. Allows for re-sampling of individuals.
-        competitors = random.sample(available, params['TOURNAMENT_SIZE'])
+        competitors = sample(available, params['TOURNAMENT_SIZE'])
 
         # Return the single best competitor.
         winners.append(max(competitors))
