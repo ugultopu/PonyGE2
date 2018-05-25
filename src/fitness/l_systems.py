@@ -52,9 +52,15 @@ class l_systems(base_ff):
                 # Update the latest forward direction.
                 latest_forward_direction = direction
             # If we're not moving forward, this means that we're rotating, since
-            # the only other options apart from 'F' are '+' and '-', which
-            # correspond to rotating counter-clockwise and clockwise.
+            # the only other options apart from 'F' are '+', '-' or 'T', which
+            # correspond to rotating counter-clockwise, rotating clockwise
+            # or finishing.
             else:
-                direction = get_next_direction(direction, move)
+                try:
+                    direction = get_next_direction(direction, move)
+                except ValueError as e:
+                    # 'T' means end of phenotype.
+                    if e.args[1] == 'T': break
+                    else: raise
 
         return 1 / ( (area + 1) + (number_of_corners * 10) )
