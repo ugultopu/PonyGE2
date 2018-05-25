@@ -15,6 +15,6 @@
 
 <exp>  ::= <sil>T | <sil><sil>T
 <sil>  ::= <mblk> | <mblk>-<mblk>+<mblk> | <sil>-<sil>+<sil>
-<mblk> ::= <mblk><blk> | <blk><blk> | <blk><blk><blk>
-<blk>  ::= <blk><idx> | <idx>
+<mblk> ::= <blk><blk> | <blk><blk><blk> | <mblk><blk>
+<blk>  ::= <idx> | <blk><idx>
 <idx>  ::= +F- | +F-F | +F-FF | +F-FFF
