@@ -9,14 +9,14 @@
 # and extend or constrain expression lengths
 
 <exp>  ::= <sil><term> | <sil><sil><term>
-<sil>  ::= <mblk> | <mblk><ccw><mblk><cw><mblk> | <sil><ccw><sil><cw><sil>
+<sil>  ::= <mblk> | <mblk><down><mblk><up><mblk> | <sil><down><sil><up><sil>
 <mblk> ::= <mblk><blk> | <blk><blk> | <blk><blk><blk>
 <blk>  ::= <blk><idx> | <idx>
 <idx>  ::= <p0> | <p1> | <p2> | <p3>
 <term> ::= 'T'
-<ccw>  ::= '+'
-<cw>   ::= '-'
-<p0>   ::= '+F-'
-<p1>   ::= '+F-F'
-<p2>   ::= '+F-FF'
-<p3>   ::= '+F-FFF'
+<up>   ::= '-'
+<down> ::= '+'
+<p0>   ::= '-F+'
+<p1>   ::= '-F+F'
+<p2>   ::= '-F+FF'
+<p3>   ::= '-F+FFF'
