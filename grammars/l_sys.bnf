@@ -1,12 +1,17 @@
-# Assumes starting orientation for turtle is facing east and
-# always faces east following 'ccw' commands and south
-# following 'cw' commands.
-# Must not produce two consecutive 'ccw' or 'cw' in a row or
-# the pen controls (terminals) will be incorrectly oriented.
+# Assumes starting orientation for the turtle is facing east and always faces
+# east following a counter-clockwise turn and faces south following a clockwise
+# turn.
+#
+# Must not produce two consecutive counter-clockwise or clockwise turns in a row
+# or the pen controls (terminals) will be incorrectly oriented.
+#
 # T is a command to return pen to the starting position in y-axis.
-# Assumes '+' is a left 90 deg turn and '-' a right 90 deg turn.
-# May need modification for more / less structural irregularity
-# and extend or constrain expression lengths
+#
+# Assumes '+' is a counter-clockwise 90 deg turn and '-' is a clockwise 90 deg
+# turn.
+#
+# May need modification for more / less structural irregularity and extend or
+# constrain expression lengths.
 
 <exp>  ::= <sil>T | <sil><sil>T
 <sil>  ::= <mblk> | <mblk>-<mblk>+<mblk> | <sil>-<sil>+<sil>
