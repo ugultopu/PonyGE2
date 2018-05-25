@@ -1,22 +1,22 @@
 # Assumes starting orientation for turtle is facing east and
-# always faces east following 'up' commands and south
-# following 'down' commands.
-# Must not produce two consecutive 'up' or 'down' in a row or
+# always faces east following 'ccw' commands and south
+# following 'cw' commands.
+# Must not produce two consecutive 'ccw' or 'cw' in a row or
 # the pen controls (terminals) will be incorrectly oriented.
 # T is a command to return pen to the starting position in y-axis.
-# Assumes '-' is a left 90 deg turn and '+' a right 90 deg turn.
+# Assumes '+' is a left 90 deg turn and '-' a right 90 deg turn.
 # May need modification for more / less structural irregularity
 # and extend or constrain expression lengths
 
 <exp>  ::= <sil><term> | <sil><sil><term>
-<sil>  ::= <mblk> | <mblk><down><mblk><up><mblk> | <sil><down><sil><up><sil>
+<sil>  ::= <mblk> | <mblk><cw><mblk><ccw><mblk> | <sil><cw><sil><ccw><sil>
 <mblk> ::= <mblk><blk> | <blk><blk> | <blk><blk><blk>
 <blk>  ::= <blk><idx> | <idx>
 <idx>  ::= <p0> | <p1> | <p2> | <p3>
 <term> ::= 'T'
-<up>   ::= '-'
-<down> ::= '+'
-<p0>   ::= '-F+'
-<p1>   ::= '-F+F'
-<p2>   ::= '-F+FF'
-<p3>   ::= '-F+FFF'
+<ccw>  ::= '+'
+<cw>   ::= '-'
+<p0>   ::= '+F-'
+<p1>   ::= '+F-F'
+<p2>   ::= '+F-FF'
+<p3>   ::= '+F-FFF'
