@@ -5,7 +5,7 @@ cache = {}
 # This dict stores the cache for an evolutionary run. The key for each entry
 # is the phenotype of the individual, the value is its fitness.
 
-cluster_center_phenotypes = []
+current_generation = 0
 
 runtime_error_cache = []
 # This list stores a list of phenotypes which produce runtime errors over an

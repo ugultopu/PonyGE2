@@ -1,5 +1,6 @@
 from algorithm.parameters import params
 from fitness.base_ff_classes.base_ff import base_ff
+from utilities.stats import trackers
 
 DIRECTIONS = ['EAST', 'NORTH', 'WEST', 'SOUTH']
 
@@ -33,19 +34,19 @@ class l_systems(base_ff):
         position = [0, 0]
         direction = 'EAST'
         latest_forward_direction = 'EAST'
-        area = 0
         number_of_corners = 0
+        max_x = 0
+        max_y = 0
         for move in ind.phenotype:
             if move == 'F':
                 # If we start going west, don't evaluate the rest.
                 if direction == 'WEST': break
                 # Get the new position
                 position = [a + b for a, b in zip(position, get_position_difference_for_direction(direction))]
+                max_x = position[0] if position[0] > max_x else max_x
+                max_y = position[1] if position[1] > max_y else max_y
                 # If we end up below the ground or left of the origin, stop.
                 if position[0] < 0 or position[1] < 0: break
-                # If we're going east, we increase the area as much as the
-                # current Y value.
-                if direction == 'EAST': area += position[1]
                 # Increase the number of corners if we started facing another
                 # direction.
                 if DIRECTIONS.index(direction) % 2 != DIRECTIONS.index(latest_forward_direction) % 2: number_of_corners += 1
@@ -63,4 +64,8 @@ class l_systems(base_ff):
                     if e.args[1] == 'T': break
                     else: raise
 
-        return 1 / ( (area + 1) + (number_of_corners * 10) )
+        current_generation = trackers.current_generation
+        if current_generation < params['GENERATIONS'] * .4: return 1 / ( max_y + number_of_corners )
+        elif current_generation < params['GENERATIONS'] * .6: return 1 / ( max_x + number_of_corners )
+        elif current_generation < params['GENERATIONS'] * .8: return 1 / ( max_y + number_of_corners )
+        else: return 1 / ( max_x + number_of_corners )

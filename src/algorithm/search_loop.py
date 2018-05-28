@@ -36,6 +36,7 @@ def search_loop():
 
     # Traditional GE
     for generation in range(1, (params['GENERATIONS']+1)):
+        trackers.current_generation = generation
         stats['gen'] = generation
 
         # New generation

@@ -28,13 +28,6 @@ def mane():
     # Print final review
     get_stats(individuals, end=True)
 
-    draw_last_generation_cluster_center_phenotypes()
-
-
-def draw_last_generation_cluster_center_phenotypes():
-    for idx, phenotype in enumerate(trackers.cluster_center_phenotypes[-params['NUMBER_OF_CLUSTERS']:]):
-        draw_and_save_turtle_plot(phenotype, 'fitness_of_the_center_of_cluster_' + str(idx))
-
 
 if __name__ == "__main__":
     set_params(sys.argv[1:])  # exclude the ponyge.py arg itself
