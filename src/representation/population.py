@@ -3,6 +3,8 @@ from random import choice
 
 from sklearn.cluster import KMeans
 
+from algorithm.parameters import params
+
 
 class Population:
     def __init__(self, individuals, cut_off_ratio, number_of_clusters):
@@ -51,6 +53,10 @@ class Population:
             clusters = self.clusters()
             combo_indices_by_cluster = [ [i for i, e in enumerate(clusters) if e == n] for n in range(self.number_of_clusters) ]
             self._cluster_individuals = [ {i for combo_index in combo_indices for i in self.combinations[combo_index] } for combo_indices in combo_indices_by_cluster ]
+            if params['PRINT_CLUSTER_BEST']:
+                for cluster in self._cluster_individuals:
+                    print(f"{len(cluster)} {max(cluster)}")
+                print()
             return self.cluster_individuals()
 
 

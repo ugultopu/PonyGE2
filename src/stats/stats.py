@@ -75,9 +75,6 @@ def get_stats(individuals, end=False):
 
     save_plot_from_data(trackers.average_fitness_list, 'average_fitness')
 
-    for n in range(params['NUMBER_OF_CLUSTERS']):
-        save_plot_from_data(trackers.average_cluster_fitness[n], 'average_cluster_fitness_' + str(n))
-
 
 def get_soo_stats(individuals, end):
     """

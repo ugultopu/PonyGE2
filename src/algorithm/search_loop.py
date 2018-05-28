@@ -1,12 +1,15 @@
-from os import path
+import turtle
+
 from multiprocessing import Pool
+from os import path
 
 from algorithm.parameters import params
 from fitness.evaluation import evaluate_fitness
-from stats.stats import stats, get_stats
-from utilities.stats import trackers
 from operators.initialisation import initialisation
+from representation.population import Population
+from stats.stats import stats, get_stats
 from utilities.algorithm.initialise_run import pool_init
+from utilities.stats import trackers
 
 def search_loop():
     """
@@ -44,6 +47,10 @@ def search_loop():
                 for individual in individuals:
                     if individual.phenotype is not None: f.write(individual.phenotype + '\n')
 
+    if params['DRAW_LAST_GEN_CLS_BEST']:
+        for idx, cluster in enumerate(Population(individuals, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS']).cluster_individuals()):
+            draw_phenotype(max(cluster).phenotype, idx)
+
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).
         params['POOL'].close()
@@ -79,3 +86,16 @@ def search_loop_from_state():
         params['POOL'].close()
 
     return individuals
+
+def draw_phenotype(phenotype, idx):
+    turtle.resetscreen()
+    for move in phenotype:
+        if move == 'F':
+            turtle.forward(2)
+        elif move == 'B':
+            turtle.backward(2)
+        elif move == '+':
+            turtle.left(90)
+        elif move == '-':
+            turtle.right(90)
+    turtle.getscreen().getcanvas().postscript(file=path.join(params['FILE_PATH'], 'phenotype_plot-' + str(idx) + '.eps'))
