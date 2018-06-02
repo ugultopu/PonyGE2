@@ -61,7 +61,6 @@ class Population:
         try: return self._normalized_compression_distances
         except AttributeError:
             fittest_individuals = self.fittest_individuals()
-            # FIXME Compute only the values that are above the diagonal and take
-            # the symmetric of them w.r.t the diagonal to compute the rest.
-            self._normalized_compression_distances = np.matrix( [[i.normalized_compression_distance(j) for j in fittest_individuals] for i in fittest_individuals] )
+            upper_triangle_of_normalized_compression_distances = np.matrix( [ [0] * idx + [i.normalized_compression_distance(j) for j in fittest_individuals[idx:]] for idx, i in enumerate(fittest_individuals) ] )
+            self._normalized_compression_distances = upper_triangle_of_normalized_compression_distances + upper_triangle_of_normalized_compression_distances.transpose() - np.diag(np.diag(upper_triangle_of_normalized_compression_distances))
             return self.normalized_compression_distances()
