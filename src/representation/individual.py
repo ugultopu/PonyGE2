@@ -1,5 +1,7 @@
 import numpy as np
 
+from zlib import compress
+
 from algorithm.mapper import mapper
 from algorithm.parameters import params
 
@@ -122,3 +124,16 @@ class Individual(object):
 
         if params['MULTICORE']:
             return self
+
+
+    def compression_length(self):
+        try: return self._compression_length
+        except AttributeError:
+            self._compression_length = len(compress(self.phenotype.encode()))
+            return self.compression_length()
+
+    def normalized_compression_distance(self, other):
+        self_compression_length = self.compression_length()
+        other_compression_length = other.compression_length()
+
+        return ( len(compress( (self.phenotype + other.phenotype).encode() )) - min(self_compression_length, other_compression_length) ) / max(self_compression_length, other_compression_length)

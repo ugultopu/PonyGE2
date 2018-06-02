@@ -1,3 +1,5 @@
+import numpy as np
+
 from itertools import combinations
 from random import choice
 
@@ -19,29 +21,17 @@ class Population:
 
 
     def fittest_individuals(self):
-        return self.individuals[int(len(self) * self.cut_off_ratio):]
+        try: return self._fittest_individuals
+        except AttributeError:
+            self._fittest_individuals = self.individuals[int(len(self) * self.cut_off_ratio):]
+            return self.fittest_individuals()
 
 
     def clusters(self):
         """Clusterize the population"""
         try: return self._clusters
         except AttributeError:
-            def combo_diffs(combo):
-                """Calculate the length of the phenotypes that match from the
-                beginning and the length that does not match"""
-                phenotype_0 = combo[0].phenotype
-                phenotype_1 = combo[1].phenotype
-                for i, (t0, t1) in enumerate(zip(phenotype_0, phenotype_1)):
-                    if t0 != t1:
-                        return (i, len(phenotype_0) + len(phenotype_1) - 2 * i)
-                return (i, abs(len(phenotype_0) - len(phenotype_1)))
-
-
-            self.combinations = list(combinations(self.fittest_individuals(), 2))
-            # FIXME We might need to make '_combo_diffs' an instance variable in
-            # order to calculate the cluster centers.
-            _combo_diffs = [combo_diffs(combo) for combo in self.combinations]
-            self._clusters = self.k_means.fit_predict(_combo_diffs)
+            self._clusters = self.k_means.fit_predict(self.normalized_compression_distances())
             return self.clusters()
 
 
@@ -50,13 +40,8 @@ class Population:
         the individuals of the respective cluster index."""
         try: return self._cluster_individuals
         except AttributeError:
-            clusters = self.clusters()
-            combo_indices_by_cluster = [ [i for i, e in enumerate(clusters) if e == n] for n in range(self.number_of_clusters) ]
-            self._cluster_individuals = [ {i for combo_index in combo_indices for i in self.combinations[combo_index] } for combo_indices in combo_indices_by_cluster ]
-            if params['PRINT_CLUSTER_BEST']:
-                for cluster in self._cluster_individuals:
-                    print(f"{len(cluster)} {max(cluster)}")
-                print()
+            fittest_individuals = self.fittest_individuals()
+            self._cluster_individuals = [ { fittest_individuals[individual_index] for individual_index, individual_cluster in enumerate(self.clusters()) if individual_cluster == current_cluster } for current_cluster in range(self.number_of_clusters) ]
             return self.cluster_individuals()
 
 
@@ -70,3 +55,13 @@ class Population:
                 while not selected_cluster: selected_cluster = choice(self.cluster_individuals())
                 self._parents.add( (choice(tuple(selected_cluster)), self.cluster_individuals().index(selected_cluster)) )
             return self.parents()
+
+
+    def normalized_compression_distances(self):
+        try: return self._normalized_compression_distances
+        except AttributeError:
+            fittest_individuals = self.fittest_individuals()
+            # FIXME Compute only the values that are above the diagonal and take
+            # the symmetric of them w.r.t the diagonal to compute the rest.
+            self._normalized_compression_distances = np.matrix( [[i.normalized_compression_distance(j) for j in fittest_individuals] for i in fittest_individuals] )
+            return self.normalized_compression_distances()
