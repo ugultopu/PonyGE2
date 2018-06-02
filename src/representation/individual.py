@@ -55,24 +55,6 @@ class Individual(object):
         else: return self.fitness < other.fitness if params['FITNESS_FUNCTION'].maximise else other.fitness < self.fitness
 
 
-    def __le__(self, other):
-        """
-        Set the definition for comparison of two instances of the individual
-        class by their fitness values. Allows for sorting/ordering of a
-        population of individuals. Note that numpy NaN is used for invalid
-        individuals and is used by some fitness functions as a default fitness.
-        We implement a custom catch for these NaN values.
-
-        :param other: Another instance of the individual class (i.e. another
-        individual) with which to compare.
-        :return: Whether or not the fitness of the current individual is
-        greater than or equal to the comparison individual.
-        """
-
-        if np.isnan(self.fitness): return True
-        elif np.isnan(other.fitness): return False
-        else: return self.fitness <= other.fitness if params['FITNESS_FUNCTION'].maximise else other.fitness <= self.fitness
-
     def __repr__(self):
         """
         Generates a string by which individuals can be identified. Useful
