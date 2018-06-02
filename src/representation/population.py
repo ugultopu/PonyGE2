@@ -50,10 +50,11 @@ class Population:
         try: return self._parents
         except AttributeError:
             self._parents = set()
-            while len(self._parents) < int(len(self.individuals) * self.cut_off_ratio):
-                selected_cluster = choice(self.cluster_individuals())
-                while not selected_cluster: selected_cluster = choice(self.cluster_individuals())
-                self._parents.add( (choice(tuple(selected_cluster)), self.cluster_individuals().index(selected_cluster)) )
+            cluster_individuals = self.cluster_individuals()
+            while len(self._parents) < int(len(self) * self.cut_off_ratio):
+                selected_cluster = choice(cluster_individuals)
+                while not selected_cluster: selected_cluster = choice(cluster_individuals)
+                self._parents.add( (choice(tuple(selected_cluster)), cluster_individuals.index(selected_cluster)) )
             return self.parents()
 
 
