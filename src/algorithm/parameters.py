@@ -76,6 +76,8 @@ params = {
         'SELECTION_PROPORTION': 0.5,
         # Allow for selection of invalid individuals during selection process.
         'INVALID_SELECTION': False,
+        # Number of clusters for clustering
+        'NUMBER_OF_CLUSTERS': 5,
 
         # OPERATOR OPTIONS
         # Boolean flag for selecting whether or not mutation is confined to
@@ -183,7 +185,7 @@ params = {
         'AGENT_SIZE': 100,
         # Interaction Probablity. How frequently the agents can interaction with each other
         'INTERACTION_PROBABILITY': 0.5,
-        
+
         # OTHER
         # Set machine name (useful for doing multiple runs)
         'MACHINE': machine_name
@@ -230,7 +232,7 @@ def load_params(file_name):
 
             # Set parameter
             params[key] = value
-        
+
 
 def set_params(command_line_args, create_files=True):
     """

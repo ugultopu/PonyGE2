@@ -57,7 +57,7 @@ class Individual(object):
         else: return self.fitness < other.fitness if params['FITNESS_FUNCTION'].maximise else other.fitness < self.fitness
 
 
-    def __repr__(self):
+    def __str__(self):
         """
         Generates a string by which individuals can be identified. Useful
         for printing information about individuals.

@@ -10,10 +10,9 @@ from operators.mutation import mutation
 
 
 class Population:
-    def __init__(self, individuals, cut_off_ratio, number_of_clusters):
+    def __init__(self, individuals, selection_proportion, number_of_clusters):
         self.individuals = sorted(individuals)
-        self.cut_off_ratio = cut_off_ratio
-        self.cut_off_count = int(len(self) * self.cut_off_ratio)
+        self.cut_off_count = int( len(self) * (1 - selection_proportion) )
         self.number_of_clusters = number_of_clusters
         self.k_means = KMeans(n_clusters=number_of_clusters)
 

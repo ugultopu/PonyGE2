@@ -7,10 +7,7 @@
 # Hereby licensed under the GNU GPL v3.
 """ Python GE implementation """
 
-from algorithm.parameters import params
 from utilities.algorithm.general import check_python_version
-from utilities.stats.save_plots import draw_and_save_turtle_plot
-from utilities.stats import trackers
 
 check_python_version()
 

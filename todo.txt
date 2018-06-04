@@ -1,4 +1,1 @@
 Find a way to not let the turtle go out of the screen.
-Use the already existing params['SELECTION_PROPORTION'] instead of params['CUT_OFF_RATIO'].
-Do not initialize the Population multiple times. Initialize it only once and use that instance anywhere needed.
-Check if you can consolidate more of the new population creation code.

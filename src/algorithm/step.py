@@ -1,10 +1,8 @@
-from algorithm.parameters import params
 from fitness.evaluation import evaluate_fitness
 from operators.crossover import crossover
 from operators.mutation import mutation
 from operators.replacement import replacement, steady_state
 from operators.selection import selection
-from representation.population import Population
 from stats.stats import get_stats
 
 def step(population):
@@ -19,10 +17,6 @@ def step(population):
     evolutionary generation will be imposed.
     :return: The next generation of the population.
     """
-
-    if params['PRINT_PHENOTYPE_FITNESS'] == True:
-        print('fitness of the individuals are:')
-        print(population)
 
     population.evolve()
 

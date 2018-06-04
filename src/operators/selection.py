@@ -1,9 +1,9 @@
 from random import sample
 
-from representation.population import Population
+from algorithm.parameters import params
 from utilities.algorithm.NSGA2 import compute_pareto_metrics, \
     crowded_comparison_operator
-from algorithm.parameters import params
+
 
 def selection(population):
     """
@@ -16,9 +16,6 @@ def selection(population):
 
     return params['SELECTION'](population)
 
-
-def clustering(population):
-    return Population(population, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS']).parents()
 
 def tournament(population):
     """
@@ -76,7 +73,7 @@ def nsga2_selection(population):
     than sorting the population according to their front rank. The
     list returned contains references to the input *population*. For more
     details on the NSGA-II operator see [Deb2002]_.
-
+    
     :param population: A population from which to select individuals.
     :returns: A list of selected individuals.
     .. [Deb2002] Deb, Pratab, Agarwal, and Meyarivan, "A fast elitist
@@ -116,18 +113,18 @@ def pareto_tournament(population, pareto, tournament_size):
     :param tournament_size: The size of the tournament.
     :return: The selected individuals.
     """
-
+    
     # Initialise no best solution.
     best = None
-
+    
     # Randomly sample *tournament_size* participants.
     participants = sample(population, tournament_size)
-
+    
     for participant in participants:
         if best is None or crowded_comparison_operator(participant, best,
                                                        pareto):
             best = participant
-
+    
     return best
 
 
