@@ -39,7 +39,9 @@ def search_loop():
         stats['gen'] = generation
 
         # New generation
-        params['STEP'](population)
+        population.evolve()
+        # Generate statistics for run so far
+        get_stats(population.individuals)
 
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).

@@ -24,7 +24,7 @@ def get_next_direction(direction, turn_direction):
     else:
         raise ValueError('Unknown turn direction', turn_direction)
 
-class l_systems(base_ff):
+class structure_silhouette(base_ff):
     def __init__(self):
         # Initialise base fitness function class.
         super().__init__()

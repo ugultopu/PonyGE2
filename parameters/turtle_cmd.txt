@@ -1,3 +1,0 @@
-FITNESS_FUNCTION:     l_systems
-GRAMMAR_FILE:         l_sys.bnf
-SELECTION_PROPORTION: .8

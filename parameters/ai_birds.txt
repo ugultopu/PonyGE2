@@ -1,0 +1,3 @@
+FITNESS_FUNCTION:     structure_silhouette
+GRAMMAR_FILE:         structure_silhouette.bnf
+SELECTION_PROPORTION: .8
