@@ -34,29 +34,31 @@ def search_loop():
     # Generate statistics for run so far
     get_stats(individuals)
 
+    population = Population(individuals, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS'])
+
     # Traditional GE
     for generation in range(1, (params['GENERATIONS']+1)):
         trackers.current_generation = generation
         stats['gen'] = generation
 
         # New generation
-        individuals = params['STEP'](individuals)
+        params['STEP'](population)
 
         # Save the phenotypes of the last generation
         if generation == params['GENERATIONS']:
             with open(path.join(params['FILE_PATH'], 'last_generation_phenotypes.txt'), 'a') as f:
-                for individual in individuals:
+                for individual in population.individuals:
                     if individual.phenotype is not None: f.write(individual.phenotype + '\n')
 
     if params['DRAW_LAST_GEN_CLS_BEST']:
-        for idx, cluster in enumerate(Population(individuals, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS']).cluster_individuals()):
+        for idx, cluster in enumerate(population.cluster_individuals):
             draw_phenotype(max(cluster).phenotype, idx)
 
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).
         params['POOL'].close()
 
-    return individuals
+    return population.individuals
 
 
 def search_loop_from_state():

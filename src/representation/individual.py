@@ -36,6 +36,8 @@ class Individual(object):
         self.fitness = params['FITNESS_FUNCTION'].default_fitness
         self.runtime_error = False
         self.name = None
+        self.normalized_compression_distances = {}
+
 
     def __lt__(self, other):
         """
@@ -63,6 +65,7 @@ class Individual(object):
         :return: A string describing the individual.
         """
         return f'{self.fitness} {self.phenotype}'
+
 
     def deep_copy(self):
         """
@@ -114,8 +117,19 @@ class Individual(object):
             self._compression_length = len(compress(self.phenotype.encode()))
             return self.compression_length()
 
-    def normalized_compression_distance(self, other):
-        self_compression_length = self.compression_length()
-        other_compression_length = other.compression_length()
 
-        return ( len(compress( (self.phenotype + other.phenotype).encode() )) - min(self_compression_length, other_compression_length) ) / max(self_compression_length, other_compression_length)
+    def normalized_compression_distance(self, other):
+        try: return self.normalized_compression_distances[other]
+        except KeyError:
+            self_compression_length = self.compression_length()
+            other_compression_length = other.compression_length()
+            normalized_compression_distance = ( len(compress( (self.phenotype + other.phenotype).encode() )) - min(self_compression_length, other_compression_length) ) / max(self_compression_length, other_compression_length)
+            self.normalized_compression_distances[other] = normalized_compression_distance
+            other.normalized_compression_distances[self] = normalized_compression_distance
+        return self.normalized_compression_distance(other)
+
+
+    def remove_obsolete_elements_from_normalized_compression_distances(self, obsolete_elements):
+        """Removes the elements specified in 'obsolete_elements' from the
+        dictionary of 'normalized_compression_distances'."""
+        self.normalized_compression_distances = {key: self.normalized_compression_distances[key] for key in self.normalized_compression_distances if key not in obsolete_elements}

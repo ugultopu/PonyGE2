@@ -7,7 +7,7 @@ from operators.selection import selection
 from representation.population import Population
 from stats.stats import get_stats
 
-def step(individuals):
+def step(population):
     """
     Runs a single generation of the evolutionary algorithm process:
         Selection
@@ -22,31 +22,12 @@ def step(individuals):
 
     if params['PRINT_PHENOTYPE_FITNESS'] == True:
         print('fitness of the individuals are:')
-        print(*sorted(individuals), sep='\n')
+        print(population)
 
-    # Select parents from the original population.
-    parents = selection(individuals)
-
-    # Crossover parents and add to the new population.
-    cross_pop = crossover(parents)
-
-    # Mutate the new population.
-    new_pop = mutation(cross_pop)
-
-    # If clustering, carry over the fittest 80% to the new population.
-    if params['SELECTION'].__name__ == 'clustering':
-        new_pop.extend(Population(individuals, params['CUT_OFF_RATIO'], params['NUMBER_OF_CLUSTERS']).fittest_individuals())
-
-    # Evaluate the fitness of the new population.
-    new_pop = evaluate_fitness(new_pop)
-
-    # Replace the old population with the new population.
-    individuals = replacement(new_pop, individuals)
+    population.evolve()
 
     # Generate statistics for run so far
-    get_stats(individuals)
-
-    return individuals
+    get_stats(population.individuals)
 
 
 def steady_state_step(individuals):
