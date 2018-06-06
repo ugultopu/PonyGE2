@@ -1,1 +1,0 @@
-Find a way to not let the turtle go out of the screen.

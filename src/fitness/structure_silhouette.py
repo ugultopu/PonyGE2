@@ -1,6 +1,5 @@
 from algorithm.parameters import params
 from fitness.base_ff_classes.base_ff import base_ff
-from utilities.stats import trackers
 
 DIRECTIONS = ['EAST', 'NORTH', 'WEST', 'SOUTH']
 
@@ -63,7 +62,9 @@ class structure_silhouette(base_ff):
             ind.max_x = max_x
             ind.max_y = max_y
 
-        if trackers.current_generation < params['GENERATIONS'] * .4: return 1 / ( ind.max_y + 1 )
-        elif trackers.current_generation < params['GENERATIONS'] * .6: return 1 / ( ind.max_x + 1 )
-        elif trackers.current_generation < params['GENERATIONS'] * .8: return 1 / ( ind.max_y + 1 )
+        current_generation = kwargs.get('current_generation')
+
+        if current_generation < params['GENERATIONS'] * .4: return 1 / ( ind.max_y + 1 )
+        elif current_generation < params['GENERATIONS'] * .6: return 1 / ( ind.max_x + 1 )
+        elif current_generation < params['GENERATIONS'] * .8: return 1 / ( ind.max_y + 1 )
         else: return 1 / ( ind.max_x + 1 )

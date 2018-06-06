@@ -6,12 +6,14 @@ from sklearn.cluster import KMeans
 from algorithm.parameters import params
 from fitness.evaluation import evaluate_fitness
 from operators.crossover import crossover_inds
+from operators.initialisation import initialisation
 from operators.mutation import mutation
 
 
 class Population:
-    def __init__(self, individuals, selection_proportion, number_of_clusters):
-        self.individuals = sorted(individuals)
+    def __init__(self, selection_proportion, number_of_clusters):
+        self.current_generation = 0
+        self.individuals = sorted(evaluate_fitness(initialisation(params['POPULATION_SIZE']), current_generation=self.current_generation))
         self.cut_off_count = int( len(self) * (1 - selection_proportion) )
         self.number_of_clusters = number_of_clusters
         self.k_means = KMeans(n_clusters=number_of_clusters)
@@ -68,7 +70,7 @@ class Population:
             parents = self._get_parents_for_crossover()
             new_children = crossover_inds(parents[0], parents[1])
             if new_children is not None: children.extend(new_children)
-        return evaluate_fitness(mutation(children))
+        return evaluate_fitness(mutation(children), current_generation=self.current_generation)
 
 
     def update_normalized_compression_distance_cache_of_fittest_individuals(self, old_fittest_individuals):
@@ -82,8 +84,15 @@ class Population:
     def evolve(self):
         """Evolve and go to the next generation. Also perform necessary
         computations upon going to the next generation."""
+        self.current_generation += 1
         self.individuals = sorted(self.fittest_individuals + self.children())
         old_fittest_individuals = self.fittest_individuals
         self.update_fittest_individuals()
         self.update_normalized_compression_distance_cache_of_fittest_individuals(old_fittest_individuals)
         self.update_cluster_individuals()
+
+
+    def plot_and_save_cluster_bests(self):
+        """Plot the most fit individual of every cluster and saves the plot."""
+        for cluster_number, cluster in enumerate(self.cluster_individuals):
+            max(cluster).save_positions_plot(f'generation_{self.current_generation}-cluster_{cluster_number}-best')

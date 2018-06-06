@@ -1,7 +1,5 @@
 from multiprocessing import Pool
 from algorithm.parameters import params
-from fitness.evaluation import evaluate_fitness
-from operators.initialisation import initialisation
 from representation.population import Population
 from stats.stats import stats, get_stats
 from utilities.algorithm.initialise_run import pool_init
@@ -22,26 +20,21 @@ def search_loop():
                               initargs=(params,))  # , maxtasksperchild=1)
 
     # Initialise population
-    individuals = initialisation(params['POPULATION_SIZE'])
-
-    # Evaluate initial population
-    individuals = evaluate_fitness(individuals)
+    population = Population(params['SELECTION_PROPORTION'], params['NUMBER_OF_CLUSTERS'])
 
     # Generate statistics for run so far
-    get_stats(individuals)
-
-    population = Population(individuals, params['SELECTION_PROPORTION'], params['NUMBER_OF_CLUSTERS'])
+    get_stats(population.individuals)
 
     # Traditional GE
     for generation in range(1, (params['GENERATIONS']+1)):
-        trackers.current_generation = generation
-
         stats['gen'] = generation
 
         # New generation
         population.evolve()
         # Generate statistics for run so far
         get_stats(population.individuals)
+
+    population.plot_and_save_cluster_bests()
 
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).

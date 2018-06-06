@@ -1,6 +1,9 @@
-import numpy as np
+import matplotlib.pyplot as plt
 
+from os import path
 from zlib import compress
+
+from numpy import isnan
 
 from algorithm.mapper import mapper
 from algorithm.parameters import params
@@ -52,8 +55,8 @@ class Individual(object):
         :return: Whether or not the fitness of the current individual is
         greater than the comparison individual.
         """
-        if np.isnan(self.fitness): return True
-        elif np.isnan(other.fitness): return False
+        if isnan(self.fitness): return True
+        elif isnan(other.fitness): return False
         else: return self.fitness < other.fitness if params['FITNESS_FUNCTION'].maximise else other.fitness < self.fitness
 
 
@@ -93,7 +96,7 @@ class Individual(object):
 
         return new_ind
 
-    def evaluate(self):
+    def evaluate(self, **kwargs):
         """
         Evaluates phenotype in using the fitness function set in the params
         dictionary. For regression/classification problems, allows for
@@ -105,7 +108,7 @@ class Individual(object):
         """
 
         # Evaluate fitness using specified fitness function.
-        self.fitness = params['FITNESS_FUNCTION'](self)
+        self.fitness = params['FITNESS_FUNCTION'](self, **kwargs)
 
         if params['MULTICORE']:
             return self
@@ -133,3 +136,9 @@ class Individual(object):
         """Removes the elements specified in 'obsolete_elements' from the
         dictionary of 'normalized_compression_distances'."""
         self.normalized_compression_distances = {key: self.normalized_compression_distances[key] for key in self.normalized_compression_distances if key not in obsolete_elements}
+
+
+    def save_positions_plot(self, name):
+        plt.plot(*zip(*self.positions))
+        plt.savefig(path.join(params['FILE_PATH'], name))
+        plt.close()
