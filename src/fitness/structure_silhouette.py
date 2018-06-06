@@ -6,13 +6,13 @@ DIRECTIONS = ['EAST', 'NORTH', 'WEST', 'SOUTH']
 
 def get_position_difference_for_direction(direction):
     if direction == 'EAST':
-        return [1, 0]
+        return (1, 0)
     elif direction == 'NORTH':
-        return [0, 1]
+        return (0, 1)
     elif direction == 'WEST':
-        return [-1, 0]
+        return (-1, 0)
     elif direction == 'SOUTH':
-        return [0, -1]
+        return (0, -1)
     else:
         raise ValueError('Unknown direction', direction)
 
@@ -30,21 +30,24 @@ class structure_silhouette(base_ff):
         super().__init__()
 
     def evaluate(self, ind, **kwargs):
-        if not hasattr(ind, 'max_x'):
+        if not hasattr(ind, 'positions'):
             # X and Y position
-            position = [0, 0]
+            current_position = (0, 0)
+            positions = [current_position]
             direction = 'EAST'
             max_x = 0
             max_y = 0
             for move in ind.phenotype:
                 if move == 'F':
                     # Get the new position
-                    position = [cc + nc for cc, nc in zip(position, get_position_difference_for_direction(direction))]
+                    current_position = tuple( [current_position_coordinate + next_position_coordinate for current_position_coordinate, next_position_coordinate in zip(current_position, get_position_difference_for_direction(direction))] )
                     # If we end up below the ground or left of the origin, stop.
-                    if position[0] < 0 or position[1] < 0: break
+                    if current_position[0] < 0 or current_position[1] < 0: break
+                    # Add the current position to 'positions' list.
+                    positions.append(current_position)
                     # Update the max X and Y values.
-                    max_x = position[0] if position[0] > max_x else max_x
-                    max_y = position[1] if position[1] > max_y else max_y
+                    max_x = current_position[0] if current_position[0] > max_x else max_x
+                    max_y = current_position[1] if current_position[1] > max_y else max_y
                 # If we're not moving forward, this means that we're rotating, since
                 # the only other options apart from 'F' are '+', '-' or 'T', which
                 # correspond to rotating counter-clockwise, rotating clockwise
@@ -56,6 +59,7 @@ class structure_silhouette(base_ff):
                         # 'T' means end of phenotype.
                         if e.args[1] == 'T': break
                         else: raise
+            ind.positions = positions
             ind.max_x = max_x
             ind.max_y = max_y
 
