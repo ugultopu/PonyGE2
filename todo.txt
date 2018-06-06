@@ -1,0 +1,1 @@
+Specify the private methods in the Population class by prepending their names with an underscore.

@@ -26,7 +26,7 @@ class Population:
         return len(self.individuals)
 
 
-    def __repr__(self):
+    def __str__(self):
         return '--------' + '\n' + '\n'.join( [str(individual) for individual in self.individuals] ) + '--------' + '\n'
 
 
@@ -46,8 +46,8 @@ class Population:
 
 
     def update_cluster_individuals(self):
-        """Return a list of list of individuals. Each set in the list contains
-        the individuals of the respective cluster index."""
+        """Update the lists of cluster individuals. Each list in the list
+        contains the individuals of the respective cluster index."""
         clusters = self.clusters()
         self.cluster_individuals = [ [ self.fittest_individuals[individual_index] for individual_index, individual_cluster in enumerate(clusters) if individual_cluster == current_cluster ] for current_cluster in range(self.number_of_clusters) ]
 
@@ -60,7 +60,7 @@ class Population:
         while parent_0_cluster == parent_1_cluster or not parent_0_cluster or not parent_1_cluster:
             parent_0_cluster = choice(cluster_individuals)
             parent_1_cluster = choice(cluster_individuals)
-        return ( choice(tuple(parent_0_cluster)), choice(tuple(parent_1_cluster)) )
+        return (choice(parent_0_cluster), choice(parent_1_cluster))
 
 
     def children(self):
@@ -93,6 +93,8 @@ class Population:
 
 
     def plot_and_save_cluster_bests(self):
-        """Plot the most fit individual of every cluster and saves the plot."""
+        """Plot the most fit individual of every cluster and save the plot."""
         for cluster_number, cluster in enumerate(self.cluster_individuals):
             max(cluster).save_positions_plot(f'generation_{self.current_generation}-cluster_{cluster_number}-best')
+        # Plot the most fit individual of the population as well
+        max(self.individuals).save_positions_plot(f'generation_{self.current_generation}-best')
