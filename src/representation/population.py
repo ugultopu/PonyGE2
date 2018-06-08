@@ -51,10 +51,7 @@ class Population:
     def children(self):
         """Return a list of children from this population."""
         children = []
-        while len(children) < self.cut_off_count:
-            parents = self._get_parents_for_crossover()
-            new_children = crossover_inds(parents[0], parents[1])
-            if new_children is not None: children.extend(new_children)
+        while len(children) < self.cut_off_count: children.extend(crossover_inds(*self._get_parents_for_crossover()))
         return evaluate_fitness(mutation(children), current_generation=self.current_generation)
 
 
