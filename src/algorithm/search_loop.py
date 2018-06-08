@@ -20,7 +20,7 @@ def search_loop():
                               initargs=(params,))  # , maxtasksperchild=1)
 
     # Initialise population
-    population = Population(params['SELECTION_PROPORTION'], params['NUMBER_OF_CLUSTERS'])
+    population = Population(params['SELECTION_PROPORTION'])
 
     # Generate statistics for run so far
     get_stats(population.individuals)
@@ -34,7 +34,7 @@ def search_loop():
         # Generate statistics for run so far
         get_stats(population.individuals)
 
-    population.plot_and_save_cluster_bests()
+    population.plot_and_save_the_best_individual()
 
     if params['MULTICORE']:
         # Close the workers pool (otherwise they'll live on forever).
