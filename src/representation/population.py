@@ -76,4 +76,6 @@ class Population:
 
     def plot_and_save_the_best_individual(self):
         """Plot the most fit individual of the population and save the plot."""
-        max(self.individuals).save_positions_plot(f'generation_{self.current_generation}-best')
+        most_fit_individual = max(self.individuals)
+        most_fit_individual.save_positions_plot(f'generation_{self.current_generation}-best')
+        most_fit_individual.save_algebraic_expression_of_positions()
