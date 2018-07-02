@@ -5,7 +5,7 @@ DIRECTIONS = ['EAST', 'NORTH', 'WEST', 'SOUTH']
 
 def get_position_difference_for_direction(direction):
     if direction == 'EAST':
-        return (1, 0)
+        return (1, 1)
     elif direction == 'NORTH':
         return (0, 1)
     elif direction == 'WEST':
@@ -54,6 +54,7 @@ class structure_silhouette(base_ff):
                 else:
                     try:
                         direction = get_next_direction(direction, move)
+                        if direction == 'WEST': break
                     except ValueError as e:
                         # 'T' means end of phenotype.
                         if e.args[1] == 'T': break
