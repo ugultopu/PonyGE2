@@ -153,19 +153,12 @@ class Individual(object):
         with open(path.join(params['FILE_PATH'], 'positions.txt'), 'a') as f:
             previous_position = self.positions[0]
             for position in self.positions[ 1:int(len(self.positions) / 2) ]:
-                # If X values of the previous and current position are the same,
-                # write the X value and Y's next value.
-                if previous_position[0] == position[0]: f.write(f'{position[0]},{position[1]}\n')
-                # Otherwise, Y is 'supposed to be' constant and X changes.
-                # However, since there is no 'x' in 'y = mx + n' when m is 0, we
-                # assume that the line is in form 'y = x + n' instead of a
-                # parallel line.
+                if previous_position[0] == position[0]: f.write(str(position[0]))
                 else:
+                    f.write('y')
                     y_displacement = previous_position[1] - previous_position[0]
-                    # Always print number sign of 'y_displacement' if
-                    # 'y_displacement' is non-zero. More information:
-                    # https://stackoverflow.com/questions/45259273/python-string-formatting-str-format-vs-f-string
-                    if y_displacement: f.write(f'y{-y_displacement:+},{position[1]}\n')
+                    if y_displacement: f.write(f'{-y_displacement:+}')
+                f.write(f',{position[1]}\n')
                 previous_position = position
             f.write('\n')
             f.write(f'0,{position[0] * 2}\n')
