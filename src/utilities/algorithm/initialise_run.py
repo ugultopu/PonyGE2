@@ -7,7 +7,7 @@ from time import time
 
 from algorithm.parameters import params
 from utilities.stats import trackers
-from utilities.stats.file_io import generate_folders_and_files
+from utilities.stats.file_io import generate_folders_and_files, save_params_to_file
 
 
 def initialise_run_params(create_files):
@@ -44,6 +44,8 @@ def initialise_run_params(create_files):
         print("Seed:\t", params['RANDOM_SEED'], "\n")
     elif create_files:
         generate_folders_and_files()
+
+    save_params_to_file()
 
 
 def set_param_imports():
@@ -151,8 +153,8 @@ def set_param_imports():
 
                         # If multiagent is specified need to change
                         # how search and step module is called
-                        # Loop and step functions for multiagent is contained 
-                        # inside algorithm search_loop_distributed and 
+                        # Loop and step functions for multiagent is contained
+                        # inside algorithm search_loop_distributed and
                         # step_distributed respectively
 
                         if params['MULTIAGENT'] and \

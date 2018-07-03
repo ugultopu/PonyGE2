@@ -183,7 +183,7 @@ params = {
         'AGENT_SIZE': 100,
         # Interaction Probablity. How frequently the agents can interaction with each other
         'INTERACTION_PROBABILITY': 0.5,
-        
+
         # OTHER
         # Set machine name (useful for doing multiple runs)
         'MACHINE': machine_name
@@ -230,7 +230,7 @@ def load_params(file_name):
 
             # Set parameter
             params[key] = value
-        
+
 
 def set_params(command_line_args, create_files=True):
     """
@@ -252,6 +252,10 @@ def set_params(command_line_args, create_files=True):
     from representation import grammar
 
     cmd_args, unknown = parse_cmd_args(command_line_args)
+
+    if cmd_args['FILE_PATH'] is not None:
+        cmd_args['FILE_PATH'] = path.join('..', cmd_args['FILE_PATH'])
+        create_files = False
 
     if unknown:
         # We currently do not parse unknown parameters. Raise error.

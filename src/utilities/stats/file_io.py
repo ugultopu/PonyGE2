@@ -147,7 +147,6 @@ def generate_folders_and_files():
     params['FILE_PATH'] = path.join(params['FILE_PATH'],
                                     str(params['TIME_STAMP']))
 
-    save_params_to_file()
 
 
 def save_params_to_file():

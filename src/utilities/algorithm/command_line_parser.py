@@ -9,7 +9,7 @@ class SortingHelpFormatter(argparse.HelpFormatter):
     this custom class, arguments will be printed in the order in which they are
     defined.
     """
-    
+
     def add_arguments(self, actions):
         actions = sorted(actions, key=attrgetter('option_strings'))
         super(SortingHelpFormatter, self).add_arguments(actions)
@@ -69,7 +69,7 @@ def parse_cmd_args(arguments):
 
         def __init__(self, option_strings, **kwargs):
             super(ListAction, self).__init__(option_strings, **kwargs)
-    
+
         def __call__(self, parser, namespace, value, option_string=None):
             if type(eval(value)) != list or any([type(i) != int for i in
                                                  eval(value)]):
@@ -103,10 +103,10 @@ def parse_cmd_args(arguments):
         """
         Class for checking raw string arguments to catch "tab" inputs.
         """
-    
+
         def __init__(self, option_strings, **kwargs):
             super(CatchTabStr, self).__init__(option_strings, **kwargs)
-    
+
         def __call__(self, parser, namespace, value, option_string=None):
             if repr(value) == repr("\\t"):
                 value = "\t"
@@ -119,6 +119,12 @@ def parse_cmd_args(arguments):
                         help='Specifies the parameters file to be used. Must '
                              'include the full file extension. Full file path'
                              'does NOT need to be specified.')
+
+    # Read output directory from arguments
+    parser.add_argument('--file_path',
+                        dest='FILE_PATH',
+                        type=str,
+                        help='Specifies the output directory.')
 
     # LOAD STEP AND SEARCH LOOP FUNCTIONS
     parser.add_argument('--search_loop',
@@ -250,7 +256,7 @@ def parse_cmd_args(arguments):
                         help='Boolean flag for selecting whether or not '
                              'mutation is confined to within the used portion '
                              'of the genome. Default set to True.')
-    
+
     # CROSSOVER
     parser.add_argument('--crossover',
                         dest='CROSSOVER',
@@ -354,7 +360,7 @@ def parse_cmd_args(arguments):
                         type=int,
                         help='Specify the number of cores to be used for '
                              'multicore evaluation. Requires int.')
-    
+
     # REPLACEMENT
     parser.add_argument('--replacement',
                         dest='REPLACEMENT',
@@ -472,9 +478,9 @@ def parse_cmd_args(arguments):
     parser.add_argument('--multiagent',
                         dest='MULTIAGENT',
                         action='store_true',
-                        default=None,                        
+                        default=None,
                         help='This enable the multiagent mode. If this mode is'
-                             ' enabled the search_loop and step parameter are' 
+                             ' enabled the search_loop and step parameter are'
                              ' overridden with search_multiagent and step_multiagent'
                              ' respectively')
     parser.add_argument('--agent_size',
@@ -569,10 +575,10 @@ def parse_cmd_args(arguments):
     # Set "None" values correctly.
     for key in sorted(cmd_args.keys()):
         # Check all specified arguments.
-        
+
         if type(cmd_args[key]) == str and cmd_args[key].lower() == "none":
             # Allow for people not using correct capitalisation.
-            
+
             cmd_args[key] = None
 
     return cmd_args, unknown
