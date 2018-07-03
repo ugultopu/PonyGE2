@@ -1,1 +1,3 @@
-Specify the private methods in the Population class by prepending their names with an underscore.
+-'structure_silhouette'te direction EAST'ken bazen northeast, bazen southeast'e
+gonder.
+-Specify the private methods in the Population class by prepending their names with an underscore.

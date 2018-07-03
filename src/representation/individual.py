@@ -146,6 +146,7 @@ class Individual(object):
         plt.savefig(path.join(params['FILE_PATH'], name))
         plt.close()
 
+
     def save_algebraic_expression_of_positions(self):
         """Converts the positions to an algebraic expression and saves it. The
         positions are expressed in a format that is meaningful to 'sympy'
@@ -155,8 +156,10 @@ class Individual(object):
             for position in self.positions[ 1:int(len(self.positions) / 2) ]:
                 if previous_position[0] == position[0]: f.write(str(position[0]))
                 else:
-                    f.write('y')
-                    y_displacement = previous_position[1] - previous_position[0]
+                    slope = (position[1] - previous_position[1]) / (position[0] - previous_position[0])
+                    if slope == 1: f.write('y')
+                    else: f.write(f'{slope}*y')
+                    y_displacement = position[1] - slope * position[0]
                     if y_displacement: f.write(f'{-y_displacement:+}')
                 f.write(f',{position[1]}\n')
                 previous_position = position
