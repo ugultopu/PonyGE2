@@ -153,7 +153,7 @@ class Individual(object):
         library."""
         with open(path.join(params['FILE_PATH'], 'positions.txt'), 'a') as f:
             previous_position = self.positions[0]
-            for position in self.positions[1:5]:
+            for position in self.positions[ 1:int(len(self.positions) / 2) ]:
                 if previous_position[0] == position[0]: f.write(str(position[0]))
                 else:
                     slope = (position[1] - previous_position[1]) / (position[0] - previous_position[0])
