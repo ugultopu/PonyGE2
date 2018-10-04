@@ -151,7 +151,7 @@ class Individual(object):
         """Converts the positions to an algebraic expression and saves it. The
         positions are expressed in a format that is meaningful to 'sympy'
         library."""
-        with open(path.join(params['FILE_PATH'], 'positions.txt'), 'a') as f:
+        with open(path.join(params['FILE_PATH'], 'silhouette.txt'), 'a') as f:
             previous_position = self.positions[0]
             for position in self.positions[ 1:int(len(self.positions) / 2) ]:
                 if previous_position[0] == position[0]: f.write(str(position[0]))
