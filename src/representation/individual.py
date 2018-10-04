@@ -138,12 +138,17 @@ class Individual(object):
         self.normalized_compression_distances = {key: self.normalized_compression_distances[key] for key in self.normalized_compression_distances if key not in obsolete_elements}
 
 
-    def save_positions_plot(self, name):
-        """Saves the positions of this individual to a file. Also plots the
-        positions of this individual and saves the plot."""
+    def save_positions_as_text(self, name):
+        """Saves the positions of this individual to a file."""
         with open(path.join(params['FILE_PATH'], name + '.txt'), 'a') as f: f.write( ' '.join(str(position) for position in self.positions) )
-        plt.plot(*zip(*self.positions))
-        plt.savefig(path.join(params['FILE_PATH'], name))
+
+
+    def save_positions_plot(self, name, number_of_first_n_positions=None):
+        """Plots the positions of this individual and saves the plot. If a
+        number for first n positions are not given, it saves the whole list of
+        positions."""
+        plt.plot(*zip(*self.positions[:number_of_first_n_positions]))
+        plt.savefig(path.join(params['FILE_PATH'], name + ('-' + str(number_of_first_n_positions) if number_of_first_n_positions is not None else '')))
         plt.close()
 
 
